@@ -1,53 +1,38 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-public class Screen extends JFrame {
+public class Figures {
+    public ArrayList<Location> Line(Location pointA, Location pointB){
+        ArrayList<Location> destinationPoints = new ArrayList<>();
+        int dy,dx,steps;
+        float x,y,Xincrement,Yincrement;
+        dx = pointB.pointX - pointA.pointX;
+        dy = pointB.pointY - pointA.pointY;
 
-    private BufferedImage buffer;
-    private Graphics graPixel;
-    public Screen(){
-        setTitle("Linea DDA");
-        setSize(900,900);
-        buffer = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
-        graPixel = (Graphics2D) buffer.createGraphics();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
-
-    }
-
-
-    public void paint(Graphics g) {
-        line(Color.cyan,new Location(100,100),new Location(100,600));
-        lineDDA(Color.RED,new Location(800,200),new Location(100,600));
-        bresenham(Color.BLACK,new Location(200,600),new Location(800,200));
-        middlePoint(Color.BLACK,new Location(300,600),new Location(800,200));
-
-//        g.drawLine(100,600,800,100);
-
-    }
-    public void line(Color g, Location pointA, Location pointB) {
-        int dx = pointB.pointX - pointA.pointX;
-        int dy = pointB.pointY - pointA.pointY;
-
-        int steps = Math.max(Math.abs(dx), Math.abs(dy));
-
-        float Xincrement = (float) dx / steps;
-        float Yincrement = (float) dy / steps;
-
-        float x = pointA.pointX;
-        float y = pointA.pointY;
-
-        for (int i = 0; i < steps; i++) {
-            x += Xincrement;
-            y += Yincrement;
-            this.putPixel((int) x, (int) y, g);
+        if(Math.abs(dy)>Math.abs(dx)){
+            steps = Math.abs(dy);
+        }else{
+            steps = Math.abs(dx);
         }
+        Xincrement =dx / steps;
+        Yincrement = dy / steps;
+
+        x =pointA.pointX;
+        y = pointA.pointY;
+
+        for(int i = 0 ; i<steps ; i++){
+            x+=Xincrement;
+            y+=Yincrement;
+            destinationPoints.add(new Location((int) x,(int) y));
+        }
+        return destinationPoints;
     }
-    public void lineDDA(Color g,Location pointA,Location pointB){
+
+    public void lineDDA(Location pointA,Location pointB){
+        ArrayList<Location> destinationPoints = new ArrayList<>();
         int dx = pointB.pointX - pointA.pointX;
         int dy = pointB.pointY - pointA.pointY;
-  
+
         if (Math.abs(dx) > Math.abs(dy)) { //pendiente < 1
             float m = (float) dy / (float) dx;
             float b = pointA.pointY - m*pointA.pointX;
@@ -58,7 +43,8 @@ public class Screen extends JFrame {
             while (pointA.pointX != pointB.pointX) {
                 pointA.pointX += dx;
                 pointA.pointY = Math.round(m*pointA.pointX + b);
-                this.putPixel(pointA.pointX, pointA.pointY, g);
+                destinationPoints.add(new Location(pointA.pointX, pointA.pointY));
+
             }
         } else
         if (dy != 0) { // pendiente>= 1
@@ -71,13 +57,14 @@ public class Screen extends JFrame {
             while (pointA.pointY != pointB.pointY) {
                 pointA.pointY += dy;
                 pointA.pointX = Math.round(m*pointA.pointY + b);
-                this.putPixel(pointA.pointX, pointA.pointY, g);
+                destinationPoints.add(new Location(pointA.pointX, pointA.pointY));
             }
         }
     }
-    public void bresenham(Color g, Location pointA,Location pointB){
-        int x, y, dx, dy, p, incE, incNE, stepx, stepy,x0,y0,x1,y1;
 
+    public void bresenham(Location pointA,Location pointB){
+        int x, y, dx, dy, p, incE, incNE, stepx, stepy,x0,y0,x1,y1;
+        ArrayList<Location> destinationPoints = new ArrayList<>();
         x0=pointA.pointX;
         y0=pointA.pointY;
         x1= pointB.pointX;
@@ -100,7 +87,7 @@ public class Screen extends JFrame {
             stepx = 1;
         x = x0;
         y = y0;
-        putPixel(x0,y0,g);
+        destinationPoints.add(new Location(x0,y0));
         /* se cicla hasta llegar al extremo de la línea */
         if(dx>dy){
             p = 2*dy - dx;
@@ -115,7 +102,7 @@ public class Screen extends JFrame {
                     y = y + stepy;
                     p = p + incNE;
                 }
-                putPixel(x,y,g);
+                destinationPoints.add(new Location(x,y));
             }
         }
         else{
@@ -131,13 +118,13 @@ public class Screen extends JFrame {
                     x = x + stepx;
                     p = p + incNE;
                 }
-                putPixel(x,y,g);
+                destinationPoints.add(new Location(x,y));
 
             }
         }
     }
 
-    public  void middlePoint(Color g,Location pointA,Location pointB){
+    public  void middlePoint(Location pointA,Location pointB){
         int x0 = pointA.pointX;
         int y0 = pointA.pointY;
         int x1 = pointB.pointX;
@@ -147,17 +134,16 @@ public class Screen extends JFrame {
         int sx = (x0 < x1) ? 1 : -1;
         int sy = (y0 < y1) ? 1 : -1;
         int err = dx - dy;
+        ArrayList<Location> destinationPoints = new ArrayList<>();
 
         int x = x0;
         int y = y0;
 
         while (true) {
-            putPixel(x,y,g);
-
+            destinationPoints.add(new Location(x,y));
             if (x == x1 && y == y1) {
                 break;
             }
-
             int e2 = 2 * err;
             if (e2 > -dy) {
                 err -= dy;
@@ -169,8 +155,27 @@ public class Screen extends JFrame {
             }
         }
     }
-    public void putPixel(int x, int y,Color c){
-        buffer.setRGB(0,0,c.getRGB());
-        this.getGraphics().drawImage(buffer,x,y,this);
+
+    public void basicCircle(Color g,Location pointA , Location pointB){
+        int centerX = (pointA.pointX + pointB.pointX) / 2;
+        int centerY = (pointA.pointY +pointB.pointY) / 2;
+        int radius = (int) Math.sqrt(Math.pow(pointB.pointX - pointA.pointX , 2) +
+                Math.pow(pointB.pointY - pointA.pointY, 2)) / 2;
+
+        for (int x = 0; x <= radius; x++) {
+            double y = Math.sqrt(radius * radius - x * x);
+            int x1 = centerX + x;
+            int x2 = centerX - x;
+            int y1 = centerY + (int) Math.round(y);
+            int y2 = centerY - (int) Math.round(y);
+
+            // Dibuja los 4 cuadrantes del círculo
+            /*putPixel(x1, y1, g);
+            putPixel(x2, y1, g);
+            putPixel(x1, y2, g);
+            putPixel(x2, y2, g);
+*/        }
+
     }
+
 }
