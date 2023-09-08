@@ -25,6 +25,19 @@ public class example extends JFrame {
         locations = new ArrayList<>();
         locations = g.Line(new Location(100,100),new Location(100,200));
         paintPoints(Color.cyan,locations);
+        locations = g.middlePointCircle(new Location(100,100),new Location(50,50));
+        paintPoints(Color.BLACK,locations);
+
+        locations = g.elipse(new Location(200,300),40,15);
+        paintPoints(Color.BLACK,locations);
+        locations = g.elipse(new Location(200,300),42,20);
+        paintPoints(Color.BLACK,locations);
+        locations = g.elipse(new Location(200,300),60,50);
+        paintPoints(Color.BLACK,locations);
+        locations = g.rectangle(new Location(300,100),new Location(400,200));
+        paintPoints(Color.BLACK,locations);
+        locations = g.rectangle(new Location(250,50),new Location(450,250));
+        paintPoints(Color.BLACK,locations);
     }
 
     private void paintPoints(Color color, ArrayList<Location> locations){

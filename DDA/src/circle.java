@@ -1,11 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class circle extends JFrame {
 
     private BufferedImage buffer;
     private Graphics graPixel;
+
+    private ArrayList<Location> arrayCircules;
     public circle(){
         setTitle("Linea DDA");
         setSize(900,900);
