@@ -29,7 +29,7 @@ public class Figures {
         return destinationPoints;
     }
 
-    public void lineDDA(Location pointA,Location pointB){
+    public ArrayList<Location> lineDDA(Location pointA,Location pointB){
         ArrayList<Location> destinationPoints = new ArrayList<>();
         int dx = pointB.pointX - pointA.pointX;
         int dy = pointB.pointY - pointA.pointY;
@@ -61,9 +61,10 @@ public class Figures {
                 destinationPoints.add(new Location(pointA.pointX, pointA.pointY));
             }
         }
+        return destinationPoints;
     }
 
-    public void bresenham(Location pointA,Location pointB){
+    public ArrayList<Location> bresenham(Location pointA,Location pointB){
         int x, y, dx, dy, p, incE, incNE, stepx, stepy,x0,y0,x1,y1;
         ArrayList<Location> destinationPoints = new ArrayList<>();
         x0=pointA.pointX;
@@ -123,9 +124,10 @@ public class Figures {
 
             }
         }
+        return destinationPoints;
     }
 
-    public  void middlePoint(Location pointA,Location pointB){
+    public  ArrayList<Location> middlePoint(Location pointA,Location pointB){
         int x0 = pointA.pointX;
         int y0 = pointA.pointY;
         int x1 = pointB.pointX;
@@ -155,6 +157,7 @@ public class Figures {
                 y += sy;
             }
         }
+        return destinationPoints;
     }
 
     public ArrayList<Location> basicCircle(Location pointA , Location pointB){
@@ -171,11 +174,15 @@ public class Figures {
             int y1 = centerY + (int) Math.round(y);
             int y2 = centerY - (int) Math.round(y);
 
-            // Dibuja los 4 cuadrantes del círculo
-            destinationPoints.add(new Location(x1, y1));
-            destinationPoints.add(new Location(x2, y1));
-            destinationPoints.add(new Location(x1, y2));
-            destinationPoints.add(new Location(x2, y2));
+            // Dibuja los 8 cuadrantes del círculo
+            destinationPoints.add(new Location(centerX + x, centerY + (int) Math.round(y)));
+            destinationPoints.add(new Location(centerX - x, centerY + (int) Math.round(y)));
+            destinationPoints.add(new Location(centerX + x, centerY - (int) Math.round(y)));
+            destinationPoints.add(new Location(centerX - x, centerY - (int) Math.round(y)));
+            destinationPoints.add(new Location(centerX + (int) Math.round(y), centerY + x));
+            destinationPoints.add(new Location(centerX - (int) Math.round(y), centerY + x));
+            destinationPoints.add(new Location(centerX + (int) Math.round(y), centerY - x));
+            destinationPoints.add(new Location(centerX - (int) Math.round(y), centerY - x));
         }
         return destinationPoints;
     }
