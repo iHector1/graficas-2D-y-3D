@@ -240,50 +240,43 @@ public class Figures {
     }
 
     public ArrayList<Location> elipse(Location points,int radiusX,int radiusY){
-        ArrayList<Location> destinationsPoints = new ArrayList<>();
-
-        for (int i = 0; i < 360; i++){
-            double radian = Math.PI / 180 * i;
-            int x = points.pointX + (int) (radiusX * Math.cos(radian));
-            int y = points.pointY + (int) (radiusY * Math.sin(radian));
-            destinationsPoints.add(new Location(x, y));
-        }
-
-        return destinationsPoints;
-    }
-    public ArrayList<Location> rectangle(Location pointA, Location pointB) {
         ArrayList<Location> destinationPoints = new ArrayList<>();
 
-        // Asegurarse de que pointA sea la esquina superior izquierda y pointB sea la esquina inferior derecha
-        if (pointA.pointX > pointB.pointX) {
-            Location temp = pointA;
-            pointA = pointB;
-            pointB = temp;
-        }
-
-        int width = pointB.pointX - pointA.pointX;
-        int height = pointB.pointY - pointA.pointY;
-
-        // Línea superior
-        for (int x = pointA.pointX; x <= pointB.pointX; x++) {
-            destinationPoints.add(new Location(x, pointA.pointY));
-        }
-
-        // Línea derecha
-        for (int y = pointA.pointY; y <= pointB.pointY; y++) {
-            destinationPoints.add(new Location(pointB.pointX, y));
-        }
-
-        // Línea inferior
-        for (int x = pointB.pointX; x >= pointA.pointX; x--) {
-            destinationPoints.add(new Location(x, pointB.pointY));
-        }
-
-        // Línea izquierda
-        for (int y = pointB.pointY; y >= pointA.pointY; y--) {
-            destinationPoints.add(new Location(pointA.pointX, y));
+        for (double i = 0; i < 360; i +=.1) {
+            double radian = Math.PI / 180 * i;
+            double x = points.pointX + (radiusX * Math.cos(radian));
+            double y = points.pointY + (radiusY * Math.sin(radian));
+            destinationPoints.add(new Location((int) x, (int) y));
         }
 
         return destinationPoints;
     }
+    public ArrayList<Location> rectangle(Location pointA, Location pointB) {
+        ArrayList<Location> squarePoints = new ArrayList<>();
+
+        // Verificar si pointA y pointB son iguales o están en la misma posición
+        if (pointA.equals(pointB)) {
+            return squarePoints; // Devolver una lista vacía si son iguales
+        }
+
+        // Encontrar el lado más corto para determinar la longitud del lado del cuadrado
+        int sideLength = Math.min(Math.abs(pointB.pointX - pointA.pointX), Math.abs(pointB.pointY - pointA.pointY));
+
+        // Asegurarse de que pointA sea la esquina superior izquierda y pointB sea la esquina inferior derecha
+        Location upperLeft = new Location(Math.min(pointA.pointX, pointB.pointX), Math.min(pointA.pointY, pointB.pointY));
+        Location lowerRight = new Location(Math.max(pointA.pointX, pointB.pointX), Math.max(pointA.pointY, pointB.pointY));
+
+        // Agregar los puntos del cuadrado
+        for (int x = upperLeft.pointX; x <= lowerRight.pointX; x++) {
+            for (int y = upperLeft.pointY; y <= lowerRight.pointY; y++) {
+                // Verificar si estamos en un borde del cuadrado y agregar ese punto
+                if (x == upperLeft.pointX || x == lowerRight.pointX || y == upperLeft.pointY || y == lowerRight.pointY) {
+                    squarePoints.add(new Location(x, y));
+                }
+            }
+        }
+
+        return squarePoints;
+    }
+
 }
