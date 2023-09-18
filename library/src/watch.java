@@ -7,7 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class watch extends JFrame implements Runnable {
-
+    private int carPositionX = 0;  // Posición inicial del carro
+    private int cloudPositionX = 0;  // Posición inicial de la nube
     private BufferedImage buffer;
     private Thread thread;
     private Figures g;
@@ -41,7 +42,9 @@ public class watch extends JFrame implements Runnable {
         int centerY = getHeight() / 2;
 
         // Limpiar la pantalla
-        drawBackground();  // Dibujar fondo con montañas
+        drawBackground(g);  // Dibujar fondo con montañas
+        drawCloud(g);
+        drawCactus(g);
         // Dibujar el reloj
         drawClockCircle(centerX, centerY);
 
@@ -73,11 +76,12 @@ public class watch extends JFrame implements Runnable {
         int endY = (int) (centerY + handLength * Math.sin(hourAngle));
 
         Color hourHandColor = Color.BLUE;
-        ArrayList<Location> points = g.lineDDA(new Location(centerX, centerY), new Location(endX, endY));
+        ArrayList<Location> points = g.middlePoint(new Location(centerX, centerY), new Location(endX, endY));
         for (Location point : points) {
             putPixel(point.pointX, point.pointY, hourHandColor);
         }
     }
+
 
     private void drawMinuteHand(int centerX, int centerY, int minute, int second) {
         double minuteAngle = Math.toRadians(((minute + second / 60.0) * 6) - 90);  // Corregir ángulo
@@ -87,7 +91,7 @@ public class watch extends JFrame implements Runnable {
         int endY = (int) (centerY + handLength * Math.sin(minuteAngle));
 
         Color minuteHandColor = Color.GREEN;
-        ArrayList<Location> points = g.lineDDA(new Location(centerX, centerY), new Location(endX, endY));
+        ArrayList<Location> points = g.middlePoint(new Location(centerX, centerY), new Location(endX, endY));
         for (Location point : points) {
             putPixel(point.pointX, point.pointY, minuteHandColor);
         }
@@ -101,11 +105,70 @@ public class watch extends JFrame implements Runnable {
         int endY = (int) (centerY + handLength * Math.sin(secondAngle));
 
         Color secondHandColor = Color.RED;
-        ArrayList<Location> points = g.lineDDA(new Location(centerX, centerY), new Location(endX, endY));
+        ArrayList<Location> points = g.middlePoint(new Location(centerX, centerY), new Location(endX, endY));
         for (Location point : points) {
             putPixel(point.pointX, point.pointY, secondHandColor);
         }
     }
+    private void drawCar(Graphics g) {
+        // Dibujar el carro
+        int carY = getHeight() - 300;  // Altura del carro en la parte inferior de la ventana
+        int carWidth = 50;
+        int carHeight = 30;
+        Color carColor = Color.BLUE;
+
+        // Limpiar la posición anterior del carro
+        g.clearRect(carPositionX - 1, carY - carHeight, carWidth + 2, carHeight);
+
+        // Dibujar el carro en la nueva posición
+        g.setColor(carColor);
+        g.fillRect(carPositionX, carY - carHeight, carWidth, carHeight);
+
+        // Mover el carro
+        carPositionX = (carPositionX + 5) % getWidth();
+        // Dibujar las llantas del carro
+        int carWheelRadius = 7;
+        int wheel1X = carPositionX -5;  // Posición de la primera llanta
+        int wheel2X = carPositionX + carWidth - 20;  // Posición de la segunda llanta
+        int wheelY = getHeight() - 300;  // Altura de la llanta en la parte inferior del carro
+
+        // Dibujar primera llanta
+        g.setColor(Color.BLACK);
+        g.fillOval(wheel1X, wheelY - carWheelRadius, carWheelRadius * 2, carWheelRadius * 2);
+
+        // Dibujar segunda llanta
+        g.setColor(Color.BLACK);
+        g.fillOval(wheel2X, wheelY - carWheelRadius, carWheelRadius * 2, carWheelRadius * 2);
+
+    }
+
+    private void drawCloud(Graphics g) {
+        // Dibujar la nube
+        int cloudY = 100;  // Altura de la nube en la parte superior de la ventana
+        int cloudWidth = 80;
+        int cloudHeight = 40;
+        Color cloudColor = Color.WHITE;
+
+        // Limpiar la posición anterior de la nube
+        g.setColor(getBackground());  // Usar el color de fondo para limpiar
+        g.fillOval(cloudPositionX - 1, cloudY, cloudWidth + 2, cloudHeight);
+        g.fillOval(cloudPositionX - 15, cloudY-20, cloudWidth + 2, cloudHeight);
+        g.fillOval(cloudPositionX - 40, cloudY, cloudWidth + 2, cloudHeight);
+        // Dibujar la nube en la nueva posición
+        g.setColor(cloudColor);
+        g.fillOval(cloudPositionX, cloudY, cloudWidth, cloudHeight);
+        g.fillOval(cloudPositionX-15, cloudY-20, cloudWidth, cloudHeight);
+        g.fillOval(cloudPositionX-40, cloudY, cloudWidth, cloudHeight);
+
+        // Mover la nube cada minuto
+        Calendar cal = Calendar.getInstance();
+        int currentMinute = cal.get(Calendar.MINUTE);
+        if (currentMinute != (currentMinute + 1) % 320) {
+            cloudPositionX = (cloudPositionX + 1) % getWidth();
+        }
+
+    }
+
 
     private void drawHourNumbers(int centerX, int centerY, Graphics g) {
         int radius = clockSize / 2 - 40;
@@ -130,15 +193,16 @@ public class watch extends JFrame implements Runnable {
         int radius = clockSize / 2 - 10;
 
         for (int i = 0; i < 60; i++) {
+            int large =i % 5 ==0 ? 20 : 10;
+            Color color =i % 5 ==0 ? Color.WHITE : Color.BLACK;
             double angle = Math.toRadians(270 - i * 6);
-            int x1 = (int) (centerX + (radius - 10) * Math.cos(angle));
-            int y1 = (int) (centerY + (radius - 10) * Math.sin(angle));
+            int x1 = (int) (centerX + (radius - large) * Math.cos(angle));
+            int y1 = (int) (centerY + (radius - large) * Math.sin(angle));
             int x2 = (int) (centerX + radius * Math.cos(angle));
             int y2 = (int) (centerY + radius * Math.sin(angle));
-
-            ArrayList<Location> points = g.lineDDA(new Location(x1, y1), new Location(x2, y2));
+            ArrayList<Location> points = g.middlePoint(new Location(x1, y1), new Location(x2, y2));
             for (Location point : points) {
-                putPixel(point.pointX, point.pointY, Color.BLACK);
+                putPixel(point.pointX, point.pointY, color);
             }
         }
     }
@@ -152,14 +216,30 @@ public class watch extends JFrame implements Runnable {
         while (true) {
             try {
                 repaint();
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
     }
+    private void drawCactus(Graphics g) {
+        int cactusHeight = 50;
+        int cactusWidth = 20;
+        Color cactusColor = new Color(34, 139, 34);  // Verde oscuro
 
-    private void drawBackground() {
+        // Dibujar cactus en la orilla izquierda
+        int cactusLeftX = 50;
+        int cactusLeftY = getHeight() - cactusHeight - 50;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusLeftX, cactusLeftY, cactusWidth, cactusHeight);
+
+        // Dibujar cactus en la orilla derecha
+        int cactusRightX = getWidth() - cactusWidth - 50;
+        int cactusRightY = getHeight() - cactusHeight - 50;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusRightX, cactusRightY, cactusWidth, cactusHeight);
+    }
+    private void drawBackground(Graphics graphics) {
         Graphics2D g2d = buffer.createGraphics();
         int radius = clockSize / 2 - 10;
         Calendar cal = Calendar.getInstance();
@@ -222,7 +302,7 @@ public class watch extends JFrame implements Runnable {
                 putPixel(point.pointX, point.pointY, Color.BLACK);
             }
         }
-
+        drawCar(graphics);
         Color circleColor = Color.GRAY;
         Color externarCirleColor = Color.DARK_GRAY;
         g2d.setColor(externarCirleColor);
