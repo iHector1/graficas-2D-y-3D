@@ -23,8 +23,8 @@ public class rectangulo extends JFrame {
         this.cirucle();
     }
     public void cirucle(){
-        locations = g.rectangle(new Location(100,100),new Location(570,500));
-        paintPoints(Color.BLACK,locations);
+       /* locations = g.rectangle(new Location(100,100),new Location(570,500));
+        paintPoints(Color.BLACK,locations);*/
         locations = g.rectangle(new Location(120,320),new Location(300,120));
         paintPoints(Color.BLUE,locations);
     }
@@ -36,5 +36,9 @@ public class rectangulo extends JFrame {
     private void putPixel(int x,int y,Color c){
         buffer.setRGB(0,0,c.getRGB());
         this.getGraphics().drawImage(buffer,x,y,this);
+    }
+
+    public static void main(String[] args) {
+        new rectangulo();
     }
 }

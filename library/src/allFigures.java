@@ -82,4 +82,8 @@ public class allFigures extends JFrame {
         buffer.setRGB(0,0,c.getRGB());
         this.getGraphics().drawImage(buffer,x,y,this);
     }
+
+    public static void main(String[] args) {
+        new allFigures();
+    }
 }

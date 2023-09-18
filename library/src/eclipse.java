@@ -23,10 +23,14 @@ public class eclipse extends JFrame {
         this.elipse();
     }
     public void elipse(){
-        locations = g.elipse(new Location(340,250),150,200);
-        paintPoints(Color.BLACK,locations);
+        /*locations = g.elipse(new Location(340,250),150,200);
+        paintPoints(Color.BLACK,locations);*/
         locations = g.elipse(new Location(70,70),34,10);
         paintPoints(Color.blue,locations);
+    }
+
+    public static void main(String[] args) {
+        new eclipse();
     }
     private void paintPoints(Color color, ArrayList<Location> locations){
         for (Location location:locations) {

@@ -23,10 +23,14 @@ public class lines extends JFrame {
         this.lineas();
     }
     public void lineas(){
-        locations = g.bresenham(new Location(100,380),new Location(140,70));
-        paintPoints(Color.BLACK,locations);
+        /*locations = g.bresenham(new Location(100,380),new Location(140,70));
+        paintPoints(Color.BLACK,locations);*/
         locations = g.middlePoint(new Location(70,70),new Location(150,380));
         paintPoints(Color.blue,locations);
+        /*locations = g.Line(new Location(70,70),new Location(350,70));
+        paintPoints(Color.red,locations);
+        locations = g.lineDDA(new Location(34,500),new Location(500,100));
+        paintPoints(Color.ORANGE,locations);*/
     }
     private void paintPoints(Color color, ArrayList<Location> locations){
         for (Location location:locations) {
@@ -36,5 +40,9 @@ public class lines extends JFrame {
     private void putPixel(int x,int y,Color c){
         buffer.setRGB(0,0,c.getRGB());
         this.getGraphics().drawImage(buffer,x,y,this);
+    }
+
+    public static void main(String[] args) {
+        new lines();
     }
 }
