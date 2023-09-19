@@ -7,7 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class watch extends JFrame implements Runnable {
-    private int carPositionX = 0;  // Posición inicial del carro
+    private int carPositionX = 300;  // Posición inicial del carro
+    private int carPositionX2 = 700;
     private int cloudPositionX = 0;  // Posición inicial de la nube
     private BufferedImage buffer;
     private Thread thread;
@@ -110,9 +111,72 @@ public class watch extends JFrame implements Runnable {
             putPixel(point.pointX, point.pointY, secondHandColor);
         }
     }
+    private void drawRoad(Graphics g) {
+        int roadY = getHeight() - 250;  // Altura de la carretera en la parte inferior de la ventana
+        int roadWidth = getWidth();  // Ancho de la carretera igual al ancho de la ventana
+        int roadHeight = 70;
+        Color roadColor = new Color(82, 82, 82);  // Color de la carretera
+        Color lineColor = Color.YELLOW;  // Color de las líneas de la carretera
+        int lineHeight = 10;  // Altura de las líneas de la carretera
+        int lineWidth = 40;  // Ancho de las líneas de la carretera
+        int gap = 30;  // Espacio entre las líneas
+
+        // Dibujar la carretera
+        g.setColor(roadColor);
+        g.fillRect(0, roadY, roadWidth, roadHeight);
+
+        // Dibujar las líneas de la carretera
+        g.setColor(lineColor);
+        int currentX = 0;
+
+        while (currentX < roadWidth) {
+            g.fillRect(currentX, roadY + ((roadHeight - lineHeight) / 2), lineWidth, lineHeight);
+            currentX += lineWidth + gap;
+        }
+        drawCar2(g);
+        drawCar(g);
+
+    }
+    private void drawCar2(Graphics g){
+        // Dibujar el carro
+        int carY = getHeight() - 230;  // Altura del carro en la parte inferior de la ventana
+        int carWidth = 50;
+        int carHeight = 30;
+        Color carColor = Color.red;
+        // Limpiar la posición anterior del carro
+        g.clearRect( carPositionX2- 1, carY - carHeight, carWidth + 2, carHeight);
+
+        // Dibujar el carro en la nueva posición
+        g.setColor(carColor);
+        g.fillRect(carPositionX2, carY - carHeight, carWidth, carHeight);
+
+        // Mover el carro hacia la izquierda
+        carPositionX2 -= 5;
+
+        // Si el carro se sale por el borde izquierdo, reposicionar en el borde derecho
+        if (carPositionX2 + carWidth < 0) {
+            carPositionX2 = getWidth();
+        }
+        // Dibujar las llantas del carro
+        int carWheelRadius = 7;
+        int wheel1X = carPositionX2+5;  // Posición de la primera llanta
+        int wheel2X = carPositionX2 + carWidth -10;  // Posición de la segunda llanta
+        int wheelY = getHeight() - 230;  // Altura de la llanta en la parte inferior del carro
+
+        // Dibujar primera llanta
+        g.setColor(Color.BLACK);
+        g.fillOval(wheel1X, wheelY - carWheelRadius, carWheelRadius * 2, carWheelRadius * 2);
+
+        // Dibujar segunda llanta
+        g.setColor(Color.BLACK);
+        g.fillOval(wheel2X, wheelY - carWheelRadius, carWheelRadius * 2, carWheelRadius * 2);
+        // Dibujar faros
+        g.setColor(Color.white);
+        g.fillOval(wheel1X+carWidth-55, carY - 20, 10, 10);
+    }
     private void drawCar(Graphics g) {
         // Dibujar el carro
-        int carY = getHeight() - 300;  // Altura del carro en la parte inferior de la ventana
+        int carY = getHeight() - 200;  // Altura del carro en la parte inferior de la ventana
         int carWidth = 50;
         int carHeight = 30;
         Color carColor = Color.BLUE;
@@ -130,7 +194,7 @@ public class watch extends JFrame implements Runnable {
         int carWheelRadius = 7;
         int wheel1X = carPositionX -5;  // Posición de la primera llanta
         int wheel2X = carPositionX + carWidth - 20;  // Posición de la segunda llanta
-        int wheelY = getHeight() - 300;  // Altura de la llanta en la parte inferior del carro
+        int wheelY = getHeight() - 200;  // Altura de la llanta en la parte inferior del carro
 
         // Dibujar primera llanta
         g.setColor(Color.BLACK);
@@ -139,9 +203,11 @@ public class watch extends JFrame implements Runnable {
         // Dibujar segunda llanta
         g.setColor(Color.BLACK);
         g.fillOval(wheel2X, wheelY - carWheelRadius, carWheelRadius * 2, carWheelRadius * 2);
+        // Dibujar faros
+        g.setColor(Color.white);
+        g.fillOval(wheel1X+carWidth - 5, carY - 20, 10, 10);
 
     }
-
     private void drawCloud(Graphics g) {
         // Dibujar la nube
         int cloudY = 100;  // Altura de la nube en la parte superior de la ventana
@@ -164,7 +230,7 @@ public class watch extends JFrame implements Runnable {
         Calendar cal = Calendar.getInstance();
         int currentMinute = cal.get(Calendar.MINUTE);
         if (currentMinute != (currentMinute + 1) % 320) {
-            cloudPositionX = (cloudPositionX + 1) % getWidth();
+            cloudPositionX =(cloudPositionX + 1) % getWidth();
         }
 
     }
@@ -216,7 +282,7 @@ public class watch extends JFrame implements Runnable {
         while (true) {
             try {
                 repaint();
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -229,13 +295,13 @@ public class watch extends JFrame implements Runnable {
 
         // Dibujar cactus en la orilla izquierda
         int cactusLeftX = 50;
-        int cactusLeftY = getHeight() - cactusHeight - 50;  // Altura del cactus en la parte inferior de la ventana
+        int cactusLeftY = getHeight() - cactusHeight - 150;  // Altura del cactus en la parte inferior de la ventana
         g.setColor(cactusColor);
         g.fillRect(cactusLeftX, cactusLeftY, cactusWidth, cactusHeight);
 
         // Dibujar cactus en la orilla derecha
         int cactusRightX = getWidth() - cactusWidth - 50;
-        int cactusRightY = getHeight() - cactusHeight - 50;  // Altura del cactus en la parte inferior de la ventana
+        int cactusRightY = getHeight() - cactusHeight - 150;  // Altura del cactus en la parte inferior de la ventana
         g.setColor(cactusColor);
         g.fillRect(cactusRightX, cactusRightY, cactusWidth, cactusHeight);
     }
@@ -302,7 +368,7 @@ public class watch extends JFrame implements Runnable {
                 putPixel(point.pointX, point.pointY, Color.BLACK);
             }
         }
-        drawCar(graphics);
+        drawRoad(graphics);
         Color circleColor = Color.GRAY;
         Color externarCirleColor = Color.DARK_GRAY;
         g2d.setColor(externarCirleColor);
@@ -322,6 +388,7 @@ public class watch extends JFrame implements Runnable {
         g2d.drawString(amPm, getWidth() / 2 - 10, centerY + 50);
 
     }
+
 
     public static void main(String[] args) {
         new watch();
