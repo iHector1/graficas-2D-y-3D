@@ -282,7 +282,7 @@ public class watch extends JFrame implements Runnable {
         while (true) {
             try {
                 repaint();
-                Thread.sleep(50);
+                Thread.sleep(10);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -298,12 +298,62 @@ public class watch extends JFrame implements Runnable {
         int cactusLeftY = getHeight() - cactusHeight - 150;  // Altura del cactus en la parte inferior de la ventana
         g.setColor(cactusColor);
         g.fillRect(cactusLeftX, cactusLeftY, cactusWidth, cactusHeight);
+        // Dibujar cactus en la orilla izquierda
+        int cactusLeftX2 = 30;
+        int cactusLeftY2 = getHeight() - cactusHeight - 140;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusLeftX2, cactusLeftY2, 10, 20);
+
+        // Dibujar cactus en la orilla derecha horizonatl
+        int cactusLeftX3 = 30;
+        int cactusLeftY3 = getHeight() - cactusHeight - 120;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusLeftX3, cactusLeftY3, 20, 10);
+        // Dibujar cactus en la orilla derecha horizonatl
+        cactusLeftX3 = 70;
+        cactusLeftY3 = getHeight() - cactusHeight - 120;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusLeftX3, cactusLeftY3, 20, 10);
+        // Dibujar cactus en la orilla izquierda
+        cactusLeftX2 = 80;
+        cactusLeftY2 = getHeight() - cactusHeight - 140;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusLeftX2, cactusLeftY2, 10, 20);
+
+
 
         // Dibujar cactus en la orilla derecha
         int cactusRightX = getWidth() - cactusWidth - 50;
         int cactusRightY = getHeight() - cactusHeight - 150;  // Altura del cactus en la parte inferior de la ventana
         g.setColor(cactusColor);
         g.fillRect(cactusRightX, cactusRightY, cactusWidth, cactusHeight);
+
+        // Dibujar cactus en la orilla derecha vertical
+        int cactusRightX2 = getWidth() - cactusWidth - 20;
+        int cactusRightY2 = getHeight() - cactusHeight - 140;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusRightX2, cactusRightY2, 10, 20);
+
+        // Dibujar cactus en la orilla derecha horizonatl
+        int cactusRightX3 = getWidth() - cactusWidth - 30;
+        int cactusRightY3 = getHeight() - cactusHeight - 120;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusRightX3, cactusRightY3, 20, 10);
+
+
+        // Dibujar cactus en la orilla derecha horizontal
+        int cactusRightX4 = getWidth() - cactusWidth - 70;
+        int cactusRightY4 = getHeight() - cactusHeight - 120;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusRightX4, cactusRightY4, 20, 10);
+        // Dibujar cactus en la orilla derecha vertical
+        int cactusRightX5 = getWidth() - cactusWidth - 70;
+        int cactusRightY5 = getHeight() - cactusHeight - 140;  // Altura del cactus en la parte inferior de la ventana
+        g.setColor(cactusColor);
+        g.fillRect(cactusRightX5, cactusRightY5, 10, 20);
+
+
+
     }
     private void drawBackground(Graphics graphics) {
         Graphics2D g2d = buffer.createGraphics();
