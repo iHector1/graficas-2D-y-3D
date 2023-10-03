@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class watch extends JFrame implements Runnable {
     private int carPositionX = 300;  // Posición inicial del carro
@@ -13,7 +11,6 @@ public class watch extends JFrame implements Runnable {
     private BufferedImage buffer;
     private Thread thread;
     private Figures g;
-    private Timer timer;
     private int clockSize = 400;  // Tamaño del reloj y de la ventana
 
     public watch() {
@@ -282,7 +279,7 @@ public class watch extends JFrame implements Runnable {
         while (true) {
             try {
                 repaint();
-                Thread.sleep(10);
+                Thread.sleep(25);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
