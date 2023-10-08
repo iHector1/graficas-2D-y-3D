@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
-public class Traslation extends JFrame implements Runnable {
+public class Scalations extends JFrame implements Runnable {
     private Image fondo;
     private Image buffer;
     private BufferedImage bufferImage;
@@ -15,28 +15,36 @@ public class Traslation extends JFrame implements Runnable {
     Location point3;
     Location point4;
     private boolean firstime;
-    int incX=0;
-    int incY=0;
-    int maxX=100;
-    public Traslation (){
-        setTitle("Scannline");
+    int incX = 0;
+    int incY = 0;
+    int maxX = 100;
+
+    public Scalations() {
+        setTitle("Escalacion");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         setLayout(null);
-        bufferImage= new BufferedImage(1,1, BufferedImage.TYPE_INT_RGB);
+        bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setVisible(true);
-        point1 = new Location(50,50);
-        point2 = new Location(100,50);
-        point3 = new Location(100,100);
-        point4 = new Location(50,100);
+        point1 = new Location(50, 50);
+        point2 = new Location(100, 50);
+        point3 = new Location(100, 100);
+        point4 = new Location(50, 100);
     }
-    public int [][]  translation(int incX, int incY, int [][] puntos) {
 
-        int [][] result=multiply(new int[][]{{1,0,incX},{0,1,incY},{0,0,1}
-        },new int[][]{
-                {puntos[0][0],puntos[0][1],1}, {puntos[1][0],puntos[1][1],1} ,{puntos[2][0],puntos[2][1],1},  {puntos[3][0],puntos[3][1],1}
+    public int[][] scalation(int incX, int incY, int[][] puntos) {
+
+        int[][] resultado = multiply(new int[][]{
+                {incX, 0, 0},
+                {0, incY, 0},
+                {0, 0, 1}
+        }, new int[][]{
+                {puntos[0][0], puntos[0][1], 1}
+                , {puntos[1][0], puntos[1][1], 1}
+                , {puntos[2][0], puntos[2][1], 1}
+                , {puntos[3][0], puntos[3][1], 1}
         });
-        return result;
+        return resultado;
     }
     public static int[][] multiply(int[][] a, int[][] b) {
         int[][] c = new int[b.length][a[0].length];
@@ -56,12 +64,12 @@ public class Traslation extends JFrame implements Runnable {
     }
     @Override
     public void run() {
-        while (incX<maxX){
+        while (incX<3){
             try {
                 incX+=1;
                 incY+=1;
                 repaint();
-                sleep(10);
+                sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }catch (Exception e){
@@ -93,7 +101,7 @@ public class Traslation extends JFrame implements Runnable {
             Bresenham(point4.pointX,point4.pointY,point1.pointX,point1.pointY);
             firstime=false;
         }
-        int [][] result= translation(incX,incY, new int[][] {{point1.pointX,point1.pointY}, {point2.pointX,point2.pointY},
+        int [][] result= scalation(incX,incY, new int[][] {{point1.pointX,point1.pointY}, {point2.pointX,point2.pointY},
                 {point3.pointX,point3.pointY},{point4.pointX,point4.pointY}});
         fill(result[0],result[1],result[3]);
         //fill();
@@ -167,8 +175,8 @@ public class Traslation extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        Traslation traslation = new Traslation();
-        traslation.run();
+        Scalations scalations = new Scalations();
+        scalations.run();
     }
 
 }

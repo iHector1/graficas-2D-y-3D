@@ -68,14 +68,7 @@ public class Scanline extends JFrame implements Runnable{
     }
     @Override
     public void run() {
-        while (true){
-            try{
-                repaint();
-                sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        repaint();
     }
     public static void main(String[] args) {
        Scanline scanline= new Scanline();
