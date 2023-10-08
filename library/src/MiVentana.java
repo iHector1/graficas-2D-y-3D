@@ -147,8 +147,10 @@ public class MiVentana extends JFrame implements Runnable {
     }
 
     public void fill(int [] punto1, int [] punto2, int [] punto3){
-        for(int i=punto1[1]; i<=punto3[1];i++){
-            Bresenham(punto1[0],punto1[1]+i,punto2[0],punto2[1]+i);
+        for(int i = this.punto1[0]; i<this.punto4[0];i++){
+            for(int j = this.punto1[1];j<this.punto4[0];j++){
+                this.putPixel(i,j,Color.black);
+            }
         }
 
     }
