@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Smoke extends JFrame {
+public class Sun extends JFrame {
 
     private Color color;
     private BufferedImage buffer;
@@ -11,11 +11,11 @@ public class Smoke extends JFrame {
     private ArrayList<Location> locations;
     private Figures g;
     private int points;
-    public Smoke(int points){
+    public Sun(int points){
         this.g = new Figures();
-        color = Color.BLUE;
-        setTitle("Smoke "+points);
-        setSize(900, 450);
+        color = Color.RED;
+        setTitle("Flower "+points);
+        setSize(700, 600);
         setLayout(null);
         setVisible(true);
         this.points = points;
@@ -27,19 +27,23 @@ public class Smoke extends JFrame {
     @Override
     public void paint(Graphics graphics){
         super.paint(graphics);
-        this.drawSmoke();
+        this.drawFlower();
     }
-    private void drawSmoke(){
-        ArrayList<Location> pointsXY = new ArrayList<>();
-        int x;
-        for (int y = 0; y > -360; y--)
+    private void drawFlower(){
+        ArrayList<Location>  location= new ArrayList<>();
+        int x, y;
+        for (int t = 0; t < 2520; t++)
         {
-            double radian = Math.PI/180 *(y*4);
-            x = (int) (Math.cos(radian) * -y);
-            putPixel(x + 400, y + 400);
-            pointsXY.add(new Location(x + 400, y + 400));
+            double radian = Math.PI/180 * t;
+            double doublex = (17 * Math.cos(radian) + (7 * Math.cos(2.4286 * radian))) * 10;
+            double doubley = (17 * Math.sin(radian) - (7 * Math.sin(2.4286 * radian))) * 10;
+
+            x = (int) doublex;
+            y = (int) doubley;
+            putPixel(x + 300, y + 300);
+            location.add(new Location(x + 300, y + 300));
         }
-        drawLines(pointsXY);
+        drawLines(location);
     }
     private void putPixel(int x,int y){
         buffer.setRGB(0, 0, color.getRGB());
@@ -47,7 +51,7 @@ public class Smoke extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Smoke(100);
+        new Sun(100);
     }
     private void drawLines(ArrayList<Location> points){
         for (int i = 0; i < points.size()-1; i++)

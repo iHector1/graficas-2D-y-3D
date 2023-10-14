@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Smoke extends JFrame {
+public class Flower extends JFrame {
 
     private Color color;
     private BufferedImage buffer;
@@ -11,11 +11,11 @@ public class Smoke extends JFrame {
     private ArrayList<Location> locations;
     private Figures g;
     private int points;
-    public Smoke(int points){
+    public Flower(int points){
         this.g = new Figures();
-        color = Color.BLUE;
-        setTitle("Smoke "+points);
-        setSize(900, 450);
+        color = Color.RED;
+        setTitle("Flower "+points);
+        setSize(900, 500);
         setLayout(null);
         setVisible(true);
         this.points = points;
@@ -27,19 +27,27 @@ public class Smoke extends JFrame {
     @Override
     public void paint(Graphics graphics){
         super.paint(graphics);
-        this.drawSmoke();
+        this.drawFlower();
     }
-    private void drawSmoke(){
-        ArrayList<Location> pointsXY = new ArrayList<>();
-        int x;
-        for (int y = 0; y > -360; y--)
+    private void drawFlower(){
+        ArrayList<Location> location = new ArrayList<>();
+        int x, y;
+        for (int t = 0; t < 360; t++)
         {
-            double radian = Math.PI/180 *(y*4);
-            x = (int) (Math.cos(radian) * -y);
-            putPixel(x + 400, y + 400);
-            pointsXY.add(new Location(x + 400, y + 400));
+            double radian = Math.PI/180*t;
+            double doublex = (Math.cos(radian) + (.5 * Math.cos(7 * radian)) + (.33 * Math.sin(17 * radian))) * 100;
+            double doubley = (Math.sin(radian) + (.5 * Math.sin(7 * radian)) + (.33 * Math.cos(17 * radian))) * 100;
+
+            x = (int) doublex;
+            y = (int) doubley;
+            putPixel(x + 300, y + 300);
+            location.add(new Location(x + 300, y + 300));
         }
-        drawLines(pointsXY);
+        drawLines(location);
+        ArrayList<Location> lastPoint = new ArrayList<>();
+        lastPoint.add(location.get(0));
+        lastPoint.add(location.get(location.size()-1));
+        drawLines(lastPoint);
     }
     private void putPixel(int x,int y){
         buffer.setRGB(0, 0, color.getRGB());
@@ -47,7 +55,7 @@ public class Smoke extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Smoke(100);
+        new Flower(100);
     }
     private void drawLines(ArrayList<Location> points){
         for (int i = 0; i < points.size()-1; i++)
