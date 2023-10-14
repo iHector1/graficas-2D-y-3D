@@ -46,7 +46,7 @@ public class CutOut extends JFrame {
     }
 
     private void fillCircle(int x1, int y1, int x2, int y2, int circleX, int circleY) {
-        int radius = 70; // Radio para obtener un diámetro de 20
+        int radius = 70; // Radio para obtener un diámetro de 34
 
         int x = 0;
         int y = radius;

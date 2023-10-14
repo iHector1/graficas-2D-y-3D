@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
-public class FillColor {
+public class FloodFill {
     private Location location;
 
-    FillColor(Location location){
+    FloodFill(Location location){
         this.location = location;
     }
 
