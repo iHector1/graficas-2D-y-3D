@@ -51,7 +51,7 @@ public class SquareGrid extends JFrame {
 
     @Override
     public void paint(Graphics g) {
-        // Dibujar en el buffer
+        // Dibujar en el bufferasdfasdfasdfasdf
         drawBorder();
         drawGrid();
 
