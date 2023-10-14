@@ -4,15 +4,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+
 public class SquareGrid extends JFrame {
     private Color color;
     private BufferedImage buffer;
     private Graphics graphics;
+    private BufferedImage offscreenBuffer;
+    private Graphics offscreenGraphics;
     private ArrayList<Location> line;
     private Figures g;
     private int points;
     public int[] verticalConstraints, horizontalConstraints;
-    public SquareGrid(int[] verticalConstraints, int[] horizontalConstraints){
+
+    public SquareGrid(int[] verticalConstraints, int[] horizontalConstraints) {
         this.g = new Figures();
         color = Color.RED;
         this.horizontalConstraints = horizontalConstraints;
@@ -22,12 +26,13 @@ public class SquareGrid extends JFrame {
         setLayout(null);
         setVisible(true);
         line = new ArrayList<>();
-        buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        graphics = (Graphics2D) buffer.createGraphics();
+        buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        graphics = buffer.getGraphics();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
-    private void drawBorder(){
+
+    private void drawBorder() {
         Location firstCorner = new Location(50, 50);
         Location secondCorner = new Location(300, 300);
 
@@ -43,39 +48,46 @@ public class SquareGrid extends JFrame {
         line = g.bresenham(secondCorner, new Location(firstCorner.pointX, secondCorner.pointY));
         drawPoints(Color.RED, line);
     }
+
     @Override
-    public void paint(Graphics graphics){
+    public void paint(Graphics g) {
+        // Dibujar en el bufferasdfasdfasdfasdf
         drawBorder();
         drawGrid();
-        graphics.drawImage(buffer, 0, 0, this);
+
+        // Copiar el buffer al gráfico principal
+        g.drawImage(buffer, 0, 0, this);
     }
-    private void drawPoints(Color color, ArrayList<Location> points){
-        this.color = color;
+
+    private void drawPoints(Color color, ArrayList<Location> points) {
+        this.color=color;
         for (Location point : points)
             putPixel(point.pointX, point.pointY);
     }
-    private void putPixel(int x,int y){
-        buffer.setRGB(0, 0, color.getRGB());
-        this.getGraphics().drawImage(buffer, x, y, this);
+
+    private void putPixel(int x, int y) {
+        buffer.setRGB(x, y, color.getRGB());
     }
-    private void drawGrid(){
-        for (int i = 0; i < verticalConstraints.length; i++){
+
+    private void drawGrid() {
+        for (int i = 0; i < verticalConstraints.length; i++) {
             line = g.bresenham(
                     new Location(verticalConstraints[i], 51),
                     new Location(verticalConstraints[i], 299));
             drawPoints(Color.BLUE, line);
         }
 
-        for (int i = 0; i < horizontalConstraints.length; i++){
+        for (int i = 0; i < horizontalConstraints.length; i++) {
             line = g.bresenham(
                     new Location(51, horizontalConstraints[i]),
                     new Location(299, horizontalConstraints[i]));
             drawPoints(Color.BLUE, line);
         }
     }
+
     public static void main(String[] args) {
-        int[] verticalConstraints = {60,70,80,90,100,110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
-        int[] horizontalConstraints = {60,70,80,90,100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
+        int[] verticalConstraints = {60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
+        int[] horizontalConstraints = {60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
 
         // Crear una instancia de la clase Grid
         SquareGrid grid = new SquareGrid(verticalConstraints, horizontalConstraints);
