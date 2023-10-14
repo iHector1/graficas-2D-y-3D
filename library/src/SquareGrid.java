@@ -9,8 +9,8 @@ public class SquareGrid extends JFrame {
     private Color color;
     private BufferedImage buffer;
     private Graphics graphics;
-    private BufferedImage offscreenBuffer;
-    private Graphics offscreenGraphics;
+    private BufferedImage offscreenBuffer;  // Buffer adicional
+    private Graphics offscreenGraphics;     // Gráfico adicional
     private ArrayList<Location> line;
     private Figures g;
     private int points;
@@ -26,8 +26,10 @@ public class SquareGrid extends JFrame {
         setLayout(null);
         setVisible(true);
         line = new ArrayList<>();
-        buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);  // Fondo transparente
         graphics = buffer.getGraphics();
+        offscreenBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);  // Fondo transparente
+        offscreenGraphics = offscreenBuffer.getGraphics();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -50,23 +52,23 @@ public class SquareGrid extends JFrame {
     }
 
     @Override
-    public void paint(Graphics g) {
-        // Dibujar en el bufferasdfasdfasdfasdf
+    public void paint(Graphics graphics) {
+        super.paint(graphics);
+        offscreenGraphics.setColor(Color.WHITE);  // Establecer fondo blanco
+        offscreenGraphics.fillRect(0, 0, getWidth(), getHeight());  // Rellenar con blanco
         drawBorder();
         drawGrid();
-
-        // Copiar el buffer al gráfico principal
-        g.drawImage(buffer, 0, 0, this);
+        graphics.drawImage(offscreenBuffer, 0, 0, this);
     }
 
     private void drawPoints(Color color, ArrayList<Location> points) {
-        this.color=color;
+        this.color= color;
         for (Location point : points)
             putPixel(point.pointX, point.pointY);
     }
 
     private void putPixel(int x, int y) {
-        buffer.setRGB(x, y, color.getRGB());
+        offscreenBuffer.setRGB(x, y, color.getRGB());  // Usar el buffer adicional
     }
 
     private void drawGrid() {
