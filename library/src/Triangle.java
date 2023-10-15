@@ -3,14 +3,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class TriangleRhombus extends JFrame {
+public class Triangle extends JFrame {
 
     private BufferedImage buffer;
     private Graphics graphics;
     private ArrayList<Location> locations;
     private Figures g;
 
-    public TriangleRhombus(){
+    public Triangle(){
         this.g = new Figures();
         setTitle("Triangulo y rombo");
         setSize(700, 600);
@@ -30,9 +30,9 @@ public class TriangleRhombus extends JFrame {
         paintPoints(Color.red, locations);
         paintPoints(locations);
         // Crear un rombo
-        locations = g.rhombus(new Location(300, 100), new Location(500, 300));
+       /* locations = g.rhombus(new Location(300, 100), new Location(500, 300));
         paintPoints(Color.black, locations);
-        paintPoints(locations);
+        paintPoints(locations);*/
     }
     private void paintPoints(ArrayList<Location> locations) {
         int[][] points = new int[locations.size()][2];
@@ -142,7 +142,7 @@ public class TriangleRhombus extends JFrame {
     }
 
     public static void main(String[] args) {
-        new TriangleRhombus();
+        new Triangle();
     }
 
 }

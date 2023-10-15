@@ -188,7 +188,7 @@ public class Rotation extends JFrame implements Runnable{
     public void run() {
 
         //  while (incX<maxX || incY<mayY){
-        while (angulo<anguloMax-10){
+        while (angulo<anguloMax-5){
 
             try {
                 angulo+=2;
