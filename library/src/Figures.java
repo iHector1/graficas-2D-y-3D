@@ -299,5 +299,38 @@ public class Figures {
 
         return squarePoints;
     }
+    public ArrayList<Location> triangle(Location pointA, Location pointB, Location pointC) {
+        ArrayList<Location> trianglePoints = new ArrayList<>();
+
+        ArrayList<Location> midAB = middlePoint(pointA, pointB);
+        ArrayList<Location> midBC = middlePoint(pointB, pointC);
+        ArrayList<Location> midCA = middlePoint(pointC, pointA);
+
+
+        trianglePoints.addAll(midAB);
+        trianglePoints.addAll(midBC);
+        trianglePoints.addAll(midCA);
+        return trianglePoints;
+    }
+    public ArrayList<Location> rhombus(Location pointA, Location pointB) {
+        ArrayList<Location> rhombusPoints = new ArrayList<>();
+
+        int midX = (pointA.pointX + pointB.pointX) / 2;
+        int midY = (pointA.pointY + pointB.pointY) / 2;
+
+        Location upperMid = new Location(midX, pointA.pointY);
+        Location lowerMid = new Location(midX, pointB.pointY);
+        Location leftMid = new Location(pointA.pointX, midY);
+        Location rightMid = new Location(pointB.pointX, midY);
+
+        rhombusPoints.addAll(Line(upperMid, rightMid));
+        rhombusPoints.addAll(Line(rightMid, lowerMid));
+        rhombusPoints.addAll(Line(lowerMid, leftMid));
+        rhombusPoints.addAll(Line(leftMid, upperMid));
+
+        return rhombusPoints;
+    }
+
+
 
 }
