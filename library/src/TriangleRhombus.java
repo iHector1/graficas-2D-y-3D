@@ -2,21 +2,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-public class FloodFill extends JFrame {
+
+public class TriangleRhombus extends JFrame {
+
     private BufferedImage buffer;
-    private int width;
-    private int height;
+    private Graphics graphics;
+    private ArrayList<Location> locations;
+    private Figures g;
 
-    public FloodFill(int width, int height) {
-        this.width = width;
-        this.height = height;
-        buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    public TriangleRhombus(){
+        this.g = new Figures();
+        setTitle("Triangulo y rombo");
+        setSize(700, 600);
+        setLayout(null);
+        setVisible(true);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(width, height);
-        setTitle("Flood Fill Example");
+        buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        graphics = (Graphics2D) buffer.createGraphics();
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
     }
-
+    @Override
+    public void paint(Graphics graphics){
+        super.paint(graphics);
+        // Crear un triángulo
+        locations = g.triangle(new Location(90, 50), new Location(30, 140), new Location(145, 150));
+        paintPoints(Color.red, locations);
+        paintPoints(locations);
+        // Crear un rombo
+        locations = g.rhombus(new Location(300, 100), new Location(500, 300));
+        paintPoints(Color.black, locations);
+        paintPoints(locations);
+    }
+    private void paintPoints(ArrayList<Location> locations) {
+        int[][] points = new int[locations.size()][2];
+        for (int i = 0; i < locations.size(); i++) {
+            points[i][0] = locations.get(i).pointX;
+            points[i][1] = locations.get(i).pointY;
+        }
+        fillFigure(points);
+    }
     private void fillFigure(int[][] points) {
         int n = points.length;
         int startX = Integer.MAX_VALUE;
@@ -89,7 +114,6 @@ public class FloodFill extends JFrame {
             direction = (direction + 1) % 4;
         }
     }
-
     private boolean isInsidePolygon(int x, int y, int[][] points) {
         int n = points.length;
         boolean isInside = false;
@@ -107,46 +131,18 @@ public class FloodFill extends JFrame {
 
         return isInside;
     }
-
-    private void putPixel(int x, int y, Color c) {
-        buffer.setRGB(x, y, c.getRGB());
+    private void paintPoints(Color color, ArrayList<Location> locations) {
+        for (Location location: locations)
+                putPixel(location.pointX,location.pointY,color);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(buffer, 0, 0, this);
+    private void putPixel(int x,int y,Color color){
+        buffer.setRGB(0, 0, color.getRGB());
+        this.getGraphics().drawImage(buffer, x, y, this);
     }
 
     public static void main(String[] args) {
-        int width = 500;
-        int height = 500;
-
-        FloodFill frame = new FloodFill(width, height);
-
-        int[][] squarePoints = {
-                {100, 100},
-                {200, 100},
-                {200, 200},
-                {100, 200}
-        };
-        frame.fillFigure(squarePoints);
-
-        int centerX = 250;
-        int centerY = 250;
-        int radius = 50;
-
-        int numPoints = 360;
-        int[][] circlePoints = new int[numPoints][2];
-
-        for (int i = 0; i < numPoints; i++) {
-            double angle = 2 * Math.PI * i / numPoints;
-            int x = (int) (centerX + radius * Math.cos(angle));
-            int y = (int) (centerY + radius * Math.sin(angle));
-            circlePoints[i] = new int[]{x, y};
-        }
-        frame.fillFigure(circlePoints);
-
-        frame.setVisible(true);
+        new TriangleRhombus();
     }
+
 }
