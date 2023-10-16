@@ -3,45 +3,64 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Triangle extends JFrame {
+public class Triangle extends JFrame implements Runnable {
 
-    private BufferedImage buffer;
-    private Graphics graphics;
+    private BufferedImage bufferImage;
+    private Image buffer;
+
+    private Image fondo;
+    private Graphics graPixel;
     private ArrayList<Location> locations;
     private Figures g;
 
-    public Triangle(){
+    public Triangle() {
         this.g = new Figures();
         setTitle("Triangulo y rombo");
         setSize(700, 600);
         setLayout(null);
         setVisible(true);
 
-        buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        graphics = (Graphics2D) buffer.createGraphics();
+        bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
+
     @Override
-    public void paint(Graphics graphics){
-        super.paint(graphics);
-        // Crear un triángulo
+    public void paint(Graphics graphics) {
+        if (fondo == null) {
+            fondo = createImage(getWidth(), getHeight());
+            Graphics gfondo = fondo.getGraphics();
+            gfondo.setClip(0, 0, getWidth(), getHeight());
+        }
+        update(graphics);
+    }
+
+    @Override
+    public void update(Graphics graphics) {
+        graphics.setClip(0, 0, getWidth(), getHeight());
+        buffer = createImage(getWidth(), getHeight());
+        graPixel = buffer.getGraphics();
+        graPixel.setClip(0, 0, getWidth(), getHeight());
+
+        // Create a triangle
         locations = g.triangle(new Location(90, 50), new Location(30, 140), new Location(145, 150));
         paintPoints(Color.red, locations);
-        paintPoints(locations);
-        // Crear un rombo
-       /* locations = g.rhombus(new Location(300, 100), new Location(500, 300));
-        paintPoints(Color.black, locations);
-        paintPoints(locations);*/
-    }
-    private void paintPoints(ArrayList<Location> locations) {
-        int[][] points = new int[locations.size()][2];
+        // Fill the triangle
+        int[][] trianglePoints = new int[locations.size()][2];
         for (int i = 0; i < locations.size(); i++) {
-            points[i][0] = locations.get(i).pointX;
-            points[i][1] = locations.get(i).pointY;
+            trianglePoints[i][0] = locations.get(i).pointX;
+            trianglePoints[i][1] = locations.get(i).pointY;
         }
-        fillFigure(points);
+        fillFigure(trianglePoints);
+
+        graphics.drawImage(buffer, 0, 0, this);
     }
+
+    private void paintPoints(Color color, ArrayList<Location> locations) {
+        for (Location location : locations)
+            putPixel(location.pointX, location.pointY, color);
+    }
+
     private void fillFigure(int[][] points) {
         int n = points.length;
         int startX = Integer.MAX_VALUE;
@@ -114,6 +133,7 @@ public class Triangle extends JFrame {
             direction = (direction + 1) % 4;
         }
     }
+
     private boolean isInsidePolygon(int x, int y, int[][] points) {
         int n = points.length;
         boolean isInside = false;
@@ -130,19 +150,29 @@ public class Triangle extends JFrame {
         }
 
         return isInside;
-    }
-    private void paintPoints(Color color, ArrayList<Location> locations) {
-        for (Location location: locations)
-                putPixel(location.pointX,location.pointY,color);
+
     }
 
-    private void putPixel(int x,int y,Color color){
-        buffer.setRGB(0, 0, color.getRGB());
-        this.getGraphics().drawImage(buffer, x, y, this);
+    private void putPixel(int x, int y, Color color) {
+        bufferImage.setRGB(0, 0, color.getRGB());
+        graPixel.drawImage(bufferImage, x, y, this);
     }
 
     public static void main(String[] args) {
-        new Triangle();
+        Triangle triangle = new Triangle();
+        Thread thread = new Thread(triangle);
+        thread.start();
     }
 
+    @Override
+    public void run() {
+        while (true) {
+            repaint();
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
