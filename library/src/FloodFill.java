@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import static java.lang.Thread.sleep;
+
 public class FloodFill extends JFrame {
     private BufferedImage buffer;
     private int width;
@@ -17,7 +20,7 @@ public class FloodFill extends JFrame {
         setTitle("Flood Fill Example");
     }
 
-    private void fillFigure(int[][] points) {
+    private void fillFigure(int[][] points) throws InterruptedException {
         int n = points.length;
         int startX = Integer.MAX_VALUE;
         int startY = Integer.MAX_VALUE;
@@ -118,7 +121,7 @@ public class FloodFill extends JFrame {
         g.drawImage(buffer, 0, 0, this);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int width = 500;
         int height = 500;
 
