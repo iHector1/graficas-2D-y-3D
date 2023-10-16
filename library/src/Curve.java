@@ -28,8 +28,7 @@ public class Curve extends JFrame {
         super.paint(graphics);
         this.parable();
     }
-    private void parable()
-    {
+    private void parable(){
         ArrayList<Location> pointsXY = new ArrayList<>();
         int y;
         for (int x = 0; x < 180; x+=(180/points))
@@ -39,7 +38,7 @@ public class Curve extends JFrame {
             putPixel(x + 150, y + 250);
             pointsXY.add(new Location(x + 150, y + 250));
         }
-        drawLines(pointsXY);
+        lines(pointsXY);
     }
     private void putPixel(int x,int y){
         buffer.setRGB(0, 0, color.getRGB());
@@ -50,8 +49,7 @@ public class Curve extends JFrame {
         new Curve(8);
         new Curve(100);
     }
-    private void drawLines(ArrayList<Location> points)
-    {
+    private void lines(ArrayList<Location> points){
         for (int i = 0; i < points.size()-1; i++)
         {
             ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));

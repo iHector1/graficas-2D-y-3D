@@ -10,15 +10,14 @@ public class Smoke extends JFrame {
     private Graphics graphics;
     private ArrayList<Location> locations;
     private Figures g;
-    private int points;
-    public Smoke(int points){
+
+    public Smoke(){
         this.g = new Figures();
         color = Color.BLUE;
-        setTitle("Smoke "+points);
+        setTitle("Smoke ");
         setSize(900, 450);
         setLayout(null);
         setVisible(true);
-        this.points = points;
         buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) buffer.createGraphics();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -47,7 +46,7 @@ public class Smoke extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Smoke(100);
+        new Smoke();
     }
     private void drawLines(ArrayList<Location> points){
         for (int i = 0; i < points.size()-1; i++)

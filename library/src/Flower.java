@@ -10,15 +10,13 @@ public class Flower extends JFrame {
     private Graphics graphics;
     private ArrayList<Location> locations;
     private Figures g;
-    private int points;
-    public Flower(int points){
+    public Flower(){
         this.g = new Figures();
         color = Color.RED;
-        setTitle("Flower "+points);
+        setTitle("Flower ");
         setSize(900, 500);
         setLayout(null);
         setVisible(true);
-        this.points = points;
         buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) buffer.createGraphics();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -28,6 +26,7 @@ public class Flower extends JFrame {
     public void paint(Graphics graphics){
         super.paint(graphics);
         this.drawFlower();
+        graphics.drawImage(this.buffer, 0, 0, this);
     }
     private void drawFlower(){
         ArrayList<Location> location = new ArrayList<>();
@@ -43,11 +42,11 @@ public class Flower extends JFrame {
             putPixel(x + 300, y + 300);
             location.add(new Location(x + 300, y + 300));
         }
-        drawLines(location);
+        lines(location);
         ArrayList<Location> lastPoint = new ArrayList<>();
         lastPoint.add(location.get(0));
         lastPoint.add(location.get(location.size()-1));
-        drawLines(lastPoint);
+        lines(lastPoint);
     }
     private void putPixel(int x,int y){
         buffer.setRGB(0, 0, color.getRGB());
@@ -55,11 +54,10 @@ public class Flower extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Flower(100);
+        new Flower();
     }
-    private void drawLines(ArrayList<Location> points){
-        for (int i = 0; i < points.size()-1; i++)
-        {
+    private void lines(ArrayList<Location> points){
+        for (int i = 0; i < points.size()-1; i++){
             ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));
             drawPoints(locations);
         }

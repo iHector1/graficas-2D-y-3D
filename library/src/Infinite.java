@@ -28,10 +28,6 @@ public class Infinite extends JFrame{
         this.infitive();
     }
 
-    private void putPixel(int x,int y,Color c){
-        buffer.setRGB(0,0,c.getRGB());
-        this.getGraphics().drawImage(buffer,x,y,this);
-    }
 
     public void infitive(){
         ArrayList<Location> locations =new ArrayList<>();
@@ -46,7 +42,7 @@ public class Infinite extends JFrame{
             this.putPixel(x+200,y+100);
             locations.add(new Location(x+200,y+100));
         }
-        this.drawLines(locations);
+        this.lines(locations);
     }
     private void putPixel(int x,int y){
         buffer.setRGB(0, 0, color.getRGB());
@@ -56,10 +52,8 @@ public class Infinite extends JFrame{
     public static void main(String[] args) {
         new Infinite();
     }
-    private void drawLines(ArrayList<Location> points)
-    {
-        for (int i = 0; i < points.size()-1; i++)
-        {
+    private void lines(ArrayList<Location> points){
+        for (int i = 0; i < points.size()-1; i++){
             ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));
             drawPoints(locations);
         }

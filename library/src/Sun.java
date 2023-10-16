@@ -28,12 +28,12 @@ public class Sun extends JFrame {
     public void paint(Graphics graphics){
         super.paint(graphics);
         this.drawFlower();
+        graphics.drawImage(buffer, 0, 0, this);
     }
     private void drawFlower(){
         ArrayList<Location>  location= new ArrayList<>();
         int x, y;
-        for (int t = 0; t < 2520; t++)
-        {
+        for (int t = 0; t < 2520; t++){
             double radian = Math.PI/180 * t;
             double doublex = (17 * Math.cos(radian) + (7 * Math.cos(2.4286 * radian))) * 10;
             double doubley = (17 * Math.sin(radian) - (7 * Math.sin(2.4286 * radian))) * 10;
