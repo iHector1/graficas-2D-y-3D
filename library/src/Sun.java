@@ -14,7 +14,7 @@ public class Sun extends JFrame {
     public Sun(int points){
         this.g = new Figures();
         color = Color.RED;
-        setTitle("Flower "+points);
+        setTitle("Sol "+points);
         setSize(700, 600);
         setLayout(null);
         setVisible(true);
