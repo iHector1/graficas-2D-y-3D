@@ -8,17 +8,20 @@ public class Animation2d extends JFrame implements Runnable {
     private BufferedImage bufferImage;
     private Image buffer;
 
+    private int bodyX,bodyY;
+
     private Image fondo;
     private Graphics graPixel;
     private ArrayList<Location> locations;
     private Figures g;
-
+    private Transformations transformations;
     public Animation2d() {
         this.g = new Figures();
         setTitle("Animacion");
         setSize(700, 650);
         setLayout(null);
         setVisible(true);
+        this.transformations = new Transformations();
         setLocationRelativeTo(null);
         bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -54,7 +57,7 @@ public class Animation2d extends JFrame implements Runnable {
                 {700, 650},
                 {0, 650}
         };
-        this.fillFigure(squarePoints2,new Color(164, 66, 0));
+        this.fillFigure(squarePoints2,new Color(150, 61, 0));
         //sun
         this.sunScene1();
 
@@ -205,36 +208,66 @@ public class Animation2d extends JFrame implements Runnable {
     }
 
     private void topCone(){
-        this.locations = g.triangle(new Location(300,360),new Location(190,100)
-                ,new Location(370,420));
+        this.locations.clear();
+        Location location1 = new Location(352,300);
+        Location location2 = new Location(300,360);
+        Location location3 = new Location(410,360);
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(0,bodyY,locations);
+
+
+        this.pointsLocations(this.locations,new Color(192, 50, 33));
     }
 
     private void rocketExhaust(){
+        this.locations.clear();
+        this.locations.add(new Location(310,570));
+        this.locations.add(new Location(340,570));
+        this.locations.add(new Location(340,620));
+        this.locations.add(new Location(310,620));
+        this.locations = transformations.translation(0,bodyY,locations);
         int[][] square = {
-                {310,570},//izq arriba
-                {340,570},
-                {340,620},
-                {310,620}
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
         };
         fillFigure(square,new Color(0,0,0));
+        this.locations.clear();
+        this.locations.add(new Location(370,570));
+        this.locations.add(new Location(400,570));
+        this.locations.add(new Location(400,620));
+        this.locations.add(new Location(370,620));
+        this.locations = transformations.translation(0,bodyY,locations);
         int[][] square2 = {
-                {370,570},//izq arriba
-                {400,570},
-                {400,620},
-                {370,620}
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
         };
         fillFigure(square2,new Color(0,0,0));
         window();
     }
 
     private void squareBody(){
-        int[][] square = {
-                {300,360},//izq arriba
-                {300,570},
-                {410,570},
-                {410,360}
-        };
+        this.locations.clear();
+        this.locations.add(new Location(300,360));
+        this.locations.add(new Location(300,570));
+        this.locations.add(new Location(410,570));
+        this.locations.add(new Location(410,360));
 
+        this.locations = transformations.translation(0,bodyY,locations);
+        int[][] square = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
         fillFigure(square,new Color(255,255,255));
     }
     private void window(){
@@ -251,10 +284,56 @@ public class Animation2d extends JFrame implements Runnable {
             circlePoints[i] = new int[]{x, y};
         }
         fillFigure(circlePoints,new Color(134, 187, 216));
+        centerX = 312;
+        centerY = 450;
+        radius = 7;
+
+        for (int i = 0; i < numPoints; i++) {
+            double angle = 2 * Math.PI * i / numPoints;
+            int x = (int) (centerX + radius * Math.cos(angle));
+            int y = (int) (centerY + radius * Math.sin(angle));
+            circlePoints[i] = new int[]{x, y};
+        }
+        fillFigure(circlePoints,new Color(89, 89, 89));
+        centerX = 353;
+        centerY = 480;
+        radius = 7;
+
+        for (int i = 0; i < numPoints; i++) {
+            double angle = 2 * Math.PI * i / numPoints;
+            int x = (int) (centerX + radius * Math.cos(angle));
+            int y = (int) (centerY + radius * Math.sin(angle));
+            circlePoints[i] = new int[]{x, y};
+        }
+        fillFigure(circlePoints,new Color(89, 89, 89));
+        centerX = 400;
+        centerY = 450;
+        radius = 7;
+
+        for (int i = 0; i < numPoints; i++) {
+            double angle = 2 * Math.PI * i / numPoints;
+            int x = (int) (centerX + radius * Math.cos(angle));
+            int y = (int) (centerY + radius * Math.sin(angle));
+            circlePoints[i] = new int[]{x, y};
+        }
+        fillFigure(circlePoints,new Color(89, 89, 89));
+    }
+
+    private void rocketWings(){
+        this.locations = g.triangle(new Location(410,506),new Location(410,570)
+                ,new Location(449,570));
+        this.pointsLocations(locations,new Color(53, 129, 184));
+        this.locations = g.triangle(new Location(300,506),new Location(300,570),
+                new Location(263,570));
+        this.pointsLocations(this.locations,new Color(53, 129, 184));
     }
     private void sceneAnimation1(){
+        bodyX+=10;
+        bodyY=1;
+        this.topCone();
         this.squareBody();
         this.rocketExhaust();
+        this.rocketWings();
     }
     public static void main(String[] args) {
         Animation2d animation2d = new Animation2d();
@@ -266,11 +345,6 @@ public class Animation2d extends JFrame implements Runnable {
     public void run() {
         while (true) {
             repaint();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
