@@ -22,7 +22,7 @@ public class Animation2d extends JFrame implements Runnable {
 
         bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
+        setVisible(false);
     }
 
     @Override
@@ -189,8 +189,9 @@ public class Animation2d extends JFrame implements Runnable {
     @Override
     public void run() {
         while (true) {
-            repaint();
             try {
+                repaint();
+                this.setVisible(true);
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
