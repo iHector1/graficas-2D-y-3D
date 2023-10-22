@@ -30,11 +30,16 @@ public class Traslation extends JFrame implements Runnable {
         point3 = new Location(100,100);
         point4 = new Location(50,100);
     }
-    public int [][]  translation(int incX, int incY, int [][] puntos) {
-
-        int [][] result=multiply(new int[][]{{1,0,incX},{0,1,incY},{0,0,1}
-        },new int[][]{
-                {puntos[0][0],puntos[0][1],1}, {puntos[1][0],puntos[1][1],1} ,{puntos[2][0],puntos[2][1],1},  {puntos[3][0],puntos[3][1],1}
+    public int[][] translation(int incX, int[][] points) {
+        int[][] result = multiply(new int[][] {
+                {1, 0, incX},
+                {0, 1, 0},  // Set incY to 0 to only move along the X-axis
+                {0, 0, 1}
+        }, new int[][] {
+                {points[0][0], points[0][1], 1},
+                {points[1][0], points[1][1], 1},
+                {points[2][0], points[2][1], 1},
+                {points[3][0], points[3][1], 1}
         });
         return result;
     }
@@ -93,7 +98,7 @@ public class Traslation extends JFrame implements Runnable {
             Bresenham(point4.pointX,point4.pointY,point1.pointX,point1.pointY);
             firstime=false;
         }
-        int [][] result= translation(incX,incY, new int[][] {{point1.pointX,point1.pointY}, {point2.pointX,point2.pointY},
+        int [][] result= translation(incX, new int[][] {{point1.pointX,point1.pointY}, {point2.pointX,point2.pointY},
                 {point3.pointX,point3.pointY},{point4.pointX,point4.pointY}});
         fill(result[0],result[1],result[3]);
         //fill();
