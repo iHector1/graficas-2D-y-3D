@@ -15,6 +15,8 @@ public class Animation2d extends JFrame implements Runnable {
     private ArrayList<Location> locations;
     private Figures g;
     private Transformations transformations;
+    private int translateX; // Traslación en X
+    private int  translateY; // Traslación en Y
     public Animation2d() {
         this.g = new Figures();
         setTitle("Animacion");
@@ -283,53 +285,89 @@ public class Animation2d extends JFrame implements Runnable {
             int y = (int) (centerY + radius * Math.sin(angle));
             circlePoints[i] = new int[]{x, y};
         }
-        fillFigure(circlePoints,new Color(134, 187, 216));
+
+        // Aplica la traslación a los puntos del círculo
+        for (int i = 0; i < numPoints; i++) {
+            circlePoints[i][1] += translateY;
+        }
+
+        fillFigure(circlePoints, new Color(134, 187, 216));
+
+        // Repite el proceso para los otros tres círculos
         centerX = 312;
         centerY = 450;
         radius = 7;
-
         for (int i = 0; i < numPoints; i++) {
             double angle = 2 * Math.PI * i / numPoints;
             int x = (int) (centerX + radius * Math.cos(angle));
             int y = (int) (centerY + radius * Math.sin(angle));
             circlePoints[i] = new int[]{x, y};
         }
-        fillFigure(circlePoints,new Color(89, 89, 89));
+        for (int i = 0; i < numPoints; i++) {
+            circlePoints[i][1] += translateY;
+        }
+        fillFigure(circlePoints, new Color(89, 89, 89));
+
+        // Repite el proceso para los otros dos círculos
         centerX = 353;
         centerY = 480;
-        radius = 7;
-
         for (int i = 0; i < numPoints; i++) {
             double angle = 2 * Math.PI * i / numPoints;
             int x = (int) (centerX + radius * Math.cos(angle));
             int y = (int) (centerY + radius * Math.sin(angle));
             circlePoints[i] = new int[]{x, y};
         }
-        fillFigure(circlePoints,new Color(89, 89, 89));
+        for (int i = 0; i < numPoints; i++) {
+            circlePoints[i][1] += translateY;
+        }
+        fillFigure(circlePoints, new Color(89, 89, 89));
+
         centerX = 400;
         centerY = 450;
-        radius = 7;
-
         for (int i = 0; i < numPoints; i++) {
             double angle = 2 * Math.PI * i / numPoints;
             int x = (int) (centerX + radius * Math.cos(angle));
             int y = (int) (centerY + radius * Math.sin(angle));
             circlePoints[i] = new int[]{x, y};
         }
-        fillFigure(circlePoints,new Color(89, 89, 89));
+        for (int i = 0; i < numPoints; i++) {
+            circlePoints[i][1] += translateY;
+        }
+        fillFigure(circlePoints, new Color(89, 89, 89));
     }
 
     private void rocketWings(){
-        this.locations = g.triangle(new Location(410,506),new Location(410,570)
-                ,new Location(449,570));
-        this.pointsLocations(locations,new Color(53, 129, 184));
-        this.locations = g.triangle(new Location(300,506),new Location(300,570),
-                new Location(263,570));
-        this.pointsLocations(this.locations,new Color(53, 129, 184));
+        this.locations.clear();
+        Location location1 = new Location(410,506);
+        Location location2 = new Location(410,570);
+        Location location3 = new Location(449,570);
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(0,bodyY,locations);
+        this.pointsLocations(locations,new Color(192, 50, 33));
+
+        this.locations.clear();
+        location1 = new Location(300,506);
+        location2 = new Location(300,570);
+        location3 = new Location(263,570);
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(0,bodyY,locations);
+        this.pointsLocations(this.locations,new Color(192, 50, 33));
     }
     private void sceneAnimation1(){
         bodyX+=10;
-        bodyY=1;
+        bodyY-=10;
+        translateX += 10; // Traslación en X
+        translateY -= 10; // Traslación en Y
         this.topCone();
         this.squareBody();
         this.rocketExhaust();
