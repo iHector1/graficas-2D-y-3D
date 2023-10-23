@@ -29,6 +29,7 @@ public class Animation2d extends JFrame implements Runnable {
     private boolean endClouds;
     private boolean endScene;
 
+
     public Animation2d() {
         this.g = new Figures();
         setTitle("Animacion");
@@ -64,8 +65,10 @@ public class Animation2d extends JFrame implements Runnable {
     }
 
     private void scene1(){
-        this.backgroudScene1();
-        this.sceneAnimation1();
+            if(!this.endScene){
+                this.backgroudScene1();
+            }
+            this.sceneAnimation1();
     }
     private void backgroudScene1(){
         //
@@ -98,31 +101,13 @@ public class Animation2d extends JFrame implements Runnable {
 
 
     }
-    private void allBlack(){
-        int width = 1; // Ancho de la imagen
-        int height = 1; // Alto de la imagen
-        BufferedImage bufferImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        // Obtiene el objeto DataBuffer, que permite acceder a los datos de los píxeles
-        DataBuffer dataBuffer = bufferImage.getRaster().getDataBuffer();
-
-        // Llena todos los píxeles con el color negro (RGB: 0, 0, 0)
-        int[] pixels = ((DataBufferInt) dataBuffer).getData();
-        for (int i = 0; i < width * height; i++) {
-            pixels[i] = 0xFF000000; // RGB: 0, 0, 0 (negro)
-        }
-    }
     @Override
     public void update(Graphics graphics) {
         graphics.setClip(0, 0, getWidth(), getHeight());
         buffer = createImage(getWidth(), getHeight());
         graPixel = buffer.getGraphics();
         graPixel.setClip(0, 0, getWidth(), getHeight());
-        if(!this.endScene){
             this.scene1();
-        }else{
-            this.allBlack();
-            System.out.println("si entroooo");
-        }
         graphics.drawImage(buffer, 0, 0, this);
     }
     private void pointsLocations(ArrayList<Location> locations,Color color){
@@ -330,7 +315,7 @@ public class Animation2d extends JFrame implements Runnable {
 
         // Aplica la traslación a los puntos del círculo
         for (int i = 0; i < numPoints; i++) {
-            circlePoints[i][1] += translateY;
+            circlePoints[i][1] += bodyY;
         }
 
         fillFigure(circlePoints, new Color(134, 187, 216));
@@ -346,7 +331,7 @@ public class Animation2d extends JFrame implements Runnable {
             circlePoints[i] = new int[]{x, y};
         }
         for (int i = 0; i < numPoints; i++) {
-            circlePoints[i][1] += translateY;
+            circlePoints[i][1] += bodyY;
         }
         fillFigure(circlePoints, new Color(89, 89, 89));
 
@@ -360,7 +345,7 @@ public class Animation2d extends JFrame implements Runnable {
             circlePoints[i] = new int[]{x, y};
         }
         for (int i = 0; i < numPoints; i++) {
-            circlePoints[i][1] += translateY;
+            circlePoints[i][1] += bodyY;
         }
         fillFigure(circlePoints, new Color(89, 89, 89));
 
@@ -373,7 +358,7 @@ public class Animation2d extends JFrame implements Runnable {
             circlePoints[i] = new int[]{x, y};
         }
         for (int i = 0; i < numPoints; i++) {
-            circlePoints[i][1] += translateY;
+            circlePoints[i][1] += bodyY;
         }
         fillFigure(circlePoints, new Color(89, 89, 89));
     }
@@ -406,41 +391,49 @@ public class Animation2d extends JFrame implements Runnable {
         this.pointsLocations(this.locations,new Color(192, 50, 33));
     }
     private void sceneAnimation1(){
-        bodyX+=10;
-        if(this.times<=0){
-            bodyY-=10;
-            translateY -= 10;
-        }
-        scalation+=2;
-        //System.out.println(bodyY);
-        //this.ejemplo();
-        if(bodyY>-530){
-            this.topCone();
-            this.squareBody();
-            this.rocketExhaust();
-            this.rocketWings();
-            this.cactus1();
-            this.cactus2();
-            this.lineClouds();
-        }else{
-            this.endScene1();
+//        bodyX+=10;
+//        System.out.println(this.endScene);
+//        if(this.times<=0){
+//            bodyY-=10;
+//            translateY -= 10;
+//        }
+//        scalation+=2;
+//        //System.out.println(bodyY);
+//        //this.space();
+//        if(bodyY>-530){
+//            this.topCone();
+//            this.squareBody();
+//            this.rocketExhaust();
+//            this.rocketWings();
+//            this.cactus1();
+//            this.cactus2();
+//            this.lineClouds();
+//        }else{
+//            this.endScene1();
+//        }
+//        if(this.endScene){
+//            this.scene2();
+//        }
+        this.endScene1();
+        if(this.endScene){
+           this.scene2();
         }
     }
 
-    private void ejemplo(){
+    private void space(){
         this.locations.clear();
-        this.locations.add(new Location(100,100));
-        this.locations.add(new Location(200,100));
-        this.locations.add(new Location(200,200));
-        this.locations.add(new Location(100,200));
-        this.locations = transformations.CenterRotation(bodyY,locations,new Location(150,150));
-        int[][] square = {
-                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
-                {this.locations.get(1).pointX,this.locations.get(1).pointY},
-                {this.locations.get(2).pointX,this.locations.get(2).pointY},
-                {this.locations.get(3).pointX,this.locations.get(3).pointY}
-        };
-        fillFigure(square,new Color(0,0,0));
+        this.locations = g.rhombus(new Location(50,50),new Location(100,100));
+        this.locations = transformations.CenterRotation(translateY,locations,new Location(75,75));
+        this.pointsLocations(this.locations,new Color(255,255,255));
+        this.locations.clear();
+        this.locations = g.rhombus(new Location(50,50),new Location(100,100));
+        this.locations = transformations.CenterRotation(translateY*-1,locations,new Location(75,75));
+        this.pointsLocations(this.locations,new Color(255,255,255));
+        this.locations.clear();
+        this.locations = g.rhombus(new Location(600,0),new Location(660,50));
+        this.locations = transformations.rotation(translateY,locations);
+        this.pointsLocations(this.locations,new Color(70, 73, 76));
+        translateY++;
     }
     private void sizes(){
         if(size>320){
@@ -450,6 +443,11 @@ public class Animation2d extends JFrame implements Runnable {
         }else{
             this.endSize=true;
         }
+    }
+
+    private void scene2(){
+        this.scanLine();
+        this.space();
     }
     private void endScene1(){
         if(this.endSize){
@@ -687,5 +685,10 @@ public class Animation2d extends JFrame implements Runnable {
             System.out.println((point.pointX) + " , " + (point.pointY));
             putPixel(point.pointX, point.pointY,Color.white);
         }
+    }
+    private void scanLine(){
+        for (int y = 0; y < getHeight() - 1; y++)
+            for (int x = 0;x <= getWidth() - 1; x++)
+                putPixel(x, y, Color.BLACK);
     }
 }
