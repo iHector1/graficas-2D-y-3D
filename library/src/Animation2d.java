@@ -31,7 +31,7 @@ public class Animation2d extends JFrame implements Runnable {
     private  int radius2;
     private boolean endClouds;
     private boolean endScene;
-
+    private int miniroket;
 
     public Animation2d() {
         this.g = new Figures();
@@ -51,6 +51,7 @@ public class Animation2d extends JFrame implements Runnable {
         endScene = false;
         this.bodyY=-10;
         this.times=3;
+        this.miniroket=1;
         bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
@@ -448,6 +449,8 @@ public class Animation2d extends JFrame implements Runnable {
             putPixel((int) (Math.random() * (max - min + 1)) + min,(int) (Math.random() * (max1 - min + 1)) + min,Color.white);
         }
         this.planet();
+        this.miniRocket();
+        this.miniroket++;
         try {
             sleep(35);
         } catch (InterruptedException e) {
@@ -684,15 +687,77 @@ public class Animation2d extends JFrame implements Runnable {
         Animation2d animation2d = new Animation2d();
         Thread thread = new Thread(animation2d);
         thread.start();
+        /*Music musicPlayer = new Music();
+
+        // Iniciar el hilo de la música
+        musicPlayer.start();*/
     }
 
     @Override
     public void run() {
         while (true) {
             repaint();
+            if(this.miniroket>200){
+                break;
+            }
         }
     }
 
+    private void miniRocket(){
+        this.locations.clear();
+        this.locations.add(new Location(380, 230));
+        this.locations.add(new Location(432, 230));
+        this.locations.add(new Location(432, 253));
+        this.locations.add(new Location(380, 253));
+
+        this.locations = transformations.translation(miniroket,1,locations);
+        int[][] square = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square,new Color(255,255,255));
+        this.locations.clear();
+        Location location1 = new Location(380,209);
+        Location location2 = new Location(380,230);
+        Location location3 = new Location(400,230);
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(miniroket,0,locations);
+        this.pointsLocations(this.locations,new Color(192, 50, 33));
+
+        this.locations.clear();
+         location1 = new Location(380,255);
+         location2 = new Location(380,273);
+         location3 = new Location(401,255);
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(miniroket,0,locations);
+        this.pointsLocations(this.locations,new Color(192, 50, 33));
+
+        location1 = new Location(452,240);
+        location2 = new Location(432,228);
+        location3 = new Location(432,253);
+        this.locations.clear();
+        this.locations.add(location1);
+        this.locations.add(location2);
+        this.locations.add(location3);
+        this.locations = g.triangle(new Location(locations.get(0).pointX,locations.get(0).pointY),
+                new Location(locations.get(1).pointX,locations.get(1).pointY),
+                new Location(locations.get(2).pointX,locations.get(2).pointY));
+        this.locations= transformations.translation(miniroket,0,locations);
+        this.pointsLocations(this.locations,new Color(192, 50, 33));
+
+    }
     public void infitive(int centerX,int centerY){
         ArrayList<Location> locations =new ArrayList<>();
         int x,y;
