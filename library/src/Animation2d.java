@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
+import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 public class Animation2d extends JFrame implements Runnable {
 
@@ -348,7 +351,7 @@ public class Animation2d extends JFrame implements Runnable {
             circlePoints[i][1] += bodyY;
         }
         fillFigure(circlePoints, new Color(89, 89, 89));
-
+        this.infitive(centerX,centerY);
         centerX = 400;
         centerY = 450;
         for (int i = 0; i < numPoints; i++) {
@@ -391,33 +394,30 @@ public class Animation2d extends JFrame implements Runnable {
         this.pointsLocations(this.locations,new Color(192, 50, 33));
     }
     private void sceneAnimation1(){
-//        bodyX+=10;
-//        System.out.println(this.endScene);
-//        if(this.times<=0){
-//            bodyY-=10;
-//            translateY -= 10;
-//        }
-//        scalation+=2;
-//        //System.out.println(bodyY);
-//        //this.space();
-//        if(bodyY>-530){
-//            this.topCone();
-//            this.squareBody();
-//            this.rocketExhaust();
-//            this.rocketWings();
-//            this.cactus1();
-//            this.cactus2();
-//            this.lineClouds();
-//        }else{
-//            this.endScene1();
-//        }
-//        if(this.endScene){
-//            this.scene2();
-//        }
-        this.endScene1();
-        if(this.endScene){
-           this.scene2();
+        bodyX+=10;
+        System.out.println(this.endScene);
+        if(this.times<=0){
+            bodyY-=10;
+            translateY -= 10;
         }
+        scalation+=2;
+        //System.out.println(bodyY);
+        //this.space();
+        if(bodyY>-530){
+            this.topCone();
+            this.squareBody();
+            this.rocketExhaust();
+            this.rocketWings();
+            this.cactus1();
+            this.cactus2();
+            this.lineClouds();
+        }else{
+            this.endScene1();
+        }
+        if(this.endScene){
+            this.scene2();
+        }
+
     }
 
     private void space(){
@@ -430,13 +430,47 @@ public class Animation2d extends JFrame implements Runnable {
         this.locations = transformations.CenterRotation(translateY*-1,locations,new Location(75,75));
         this.pointsLocations(this.locations,new Color(255,255,255));
         this.locations.clear();
-        this.locations = g.rhombus(new Location(600,0),new Location(660,50));
-        this.locations = transformations.rotation(translateY,locations);
+        this.locations = g.rhombus(new Location(400,10),new Location(420,30));
+        this.locations = transformations.CenterRotation(translateY,locations,new Location(314,200));
+        this.pointsLocations(this.locations,new Color(70, 73, 76));
+        this.locations = g.rhombus(new Location(100,10),new Location(120,30));
+        this.locations = transformations.CenterRotation(translateY,locations,new Location(314,200));
         this.pointsLocations(this.locations,new Color(70, 73, 76));
         translateY++;
+        this.locations.clear();
+        this.locations = g.elipse(new Location(314,200),100,100);
+        this.drawPoints(this.locations,new Color(70, 73, 76));
+        System.out.println(translateY);
+        int min=0;
+        int max1 = 400;
+        int max = 700;
+        for(int i = 0 ; i<50;i++){
+            putPixel((int) (Math.random() * (max - min + 1)) + min,(int) (Math.random() * (max1 - min + 1)) + min,Color.white);
+        }
+        this.planet();
+        try {
+            sleep(35);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void planet(){
+        int centerX = 314;
+        int centerY = 200;
+        int radius = 80;
+        int numPoints = 360;
+        int[][] circlePoints = new int[numPoints][2];
+
+        for (int i = 0; i < numPoints; i++) {
+            double angle = 2 * Math.PI * i / numPoints;
+            int x = (int) (centerX + radius * Math.cos(angle));
+            int y = (int) (centerY + radius * Math.sin(angle));
+            circlePoints[i] = new int[]{x, y};
+        }
+        fillFigure(circlePoints,new Color(86, 40, 45));
     }
     private void sizes(){
-        if(size>320){
+        if(size>400){
             size-=10;
             System.out.println(size);
             setSize(getWidth(),size);
@@ -659,31 +693,30 @@ public class Animation2d extends JFrame implements Runnable {
         }
     }
 
-    public void infitive(){
+    public void infitive(int centerX,int centerY){
         ArrayList<Location> locations =new ArrayList<>();
         int x,y;
         for (int t = 0; t<=360;t++){
             double radians = Math.PI/180 * t;
             double cos = Math.cos(radians);
             double sin = Math.sin(radians);
-            x = (int) ((100 * sin) / (1 + (cos * cos)));
-            y = (int) ((100 * sin * cos) / (1 + (cos * cos)));
+            x = (int) ((30 * sin) / (1 + (cos * cos)));
+            y = (int) ((30 * sin * cos) / (1 + (cos * cos)));
             //System.out.println((x+450)+" , "+(y+450));
-            this.putPixel(x+200,y+100,Color.blue);
-            locations.add(new Location(x+200,y+100));
+            this.putPixel(x+centerX,y+centerY+this.bodyY+50,Color.blue);
+            locations.add(new Location(x+centerX,y+centerY+this.bodyY+50));
         }
         this.lines(locations);
     }
     private void lines(ArrayList<Location> points){
         for (int i = 0; i < points.size()-1; i++){
             ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));
-            drawPoints(locations);
+            drawPoints(locations,Color.BLUE);
         }
     }
-    public void drawPoints(ArrayList<Location> locations) {
+    public void drawPoints(ArrayList<Location> locations,Color color) {
         for (Location point : locations) {
-            System.out.println((point.pointX) + " , " + (point.pointY));
-            putPixel(point.pointX, point.pointY,Color.white);
+            putPixel(point.pointX, point.pointY,color);
         }
     }
     private void scanLine(){
