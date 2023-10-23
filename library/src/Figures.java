@@ -331,6 +331,23 @@ public class Figures {
         return rhombusPoints;
     }
 
+    public ArrayList<Location> Rectangle(Location pointA, Location pointB) {
+        ArrayList<Location> points = new ArrayList<>();
 
+        // Use los métodos de la clase Figures para calcular los puntos del rectángulo
+        ArrayList<Location> line1 = Line(pointA, new Location(pointB.pointX, pointA.pointY));
+        ArrayList<Location> line2 = Line(new Location(pointA.pointX, pointB.pointY), pointB);
 
+        ArrayList<Location> line3 = Line(pointA, new Location(pointA.pointX, pointB.pointY));
+        ArrayList<Location> line4 = Line(new Location(pointB.pointX, pointA.pointY), pointB);
+
+        // Agregue todos los puntos de las líneas al resultado
+        points.addAll(line1);
+        points.addAll(line2);
+        points.addAll(line3);
+        points.addAll(line4);
+
+        return points;
+
+    }
 }

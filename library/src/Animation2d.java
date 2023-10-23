@@ -1,10 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 public class Animation2d extends JFrame implements Runnable {
 
+    private int times;
+    private float scalation;
     private BufferedImage bufferImage;
     private Image buffer;
 
@@ -17,6 +21,14 @@ public class Animation2d extends JFrame implements Runnable {
     private Transformations transformations;
     private int translateX; // Traslación en X
     private int  translateY; // Traslación en Y
+    private float counter;
+    private int size;
+    private boolean endSize;
+    private int radius;
+    private  int radius2;
+    private boolean endClouds;
+    private boolean endScene;
+
     public Animation2d() {
         this.g = new Figures();
         setTitle("Animacion");
@@ -24,10 +36,21 @@ public class Animation2d extends JFrame implements Runnable {
         setLayout(null);
         setVisible(true);
         this.transformations = new Transformations();
+        this.locations = new ArrayList<>();
         setLocationRelativeTo(null);
+        counter=1;
+        size = 600;
+        this.radius = 4;
+        this.radius2 = 1;
+        this.endSize = false;
+        this.endClouds = false;
+        endScene = false;
+        this.bodyY=-10;
+        this.times=3;
         bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+
     }
 
     @Override
@@ -46,6 +69,7 @@ public class Animation2d extends JFrame implements Runnable {
     }
     private void backgroudScene1(){
         //
+        ArrayList<Location> location= new ArrayList<>();
         int[][] squarePoints = {
                 {0, 0},//izq arribs
                 {700, 0},//der arri
@@ -65,14 +89,27 @@ public class Animation2d extends JFrame implements Runnable {
 
         //mountains
 
-        this.locations = g.triangle(new Location(0,420),new Location(190,100)
+        location = g.triangle(new Location(0,420),new Location(190,100)
                 ,new Location(370,420));
-        this.pointsLocations(locations,new Color(81, 60, 44));
-        this.locations = g.triangle(new Location(371,420),new Location(540,100)
+        this.pointsLocations(location,new Color(81, 60, 44));
+        location = g.triangle(new Location(371,420),new Location(540,100)
                 ,new Location(700,420));
-        this.pointsLocations(locations,new Color(81, 60, 44));
+        this.pointsLocations(location,new Color(81, 60, 44));
 
 
+    }
+    private void allBlack(){
+        int width = 1; // Ancho de la imagen
+        int height = 1; // Alto de la imagen
+        BufferedImage bufferImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        // Obtiene el objeto DataBuffer, que permite acceder a los datos de los píxeles
+        DataBuffer dataBuffer = bufferImage.getRaster().getDataBuffer();
+
+        // Llena todos los píxeles con el color negro (RGB: 0, 0, 0)
+        int[] pixels = ((DataBufferInt) dataBuffer).getData();
+        for (int i = 0; i < width * height; i++) {
+            pixels[i] = 0xFF000000; // RGB: 0, 0, 0 (negro)
+        }
     }
     @Override
     public void update(Graphics graphics) {
@@ -80,7 +117,12 @@ public class Animation2d extends JFrame implements Runnable {
         buffer = createImage(getWidth(), getHeight());
         graPixel = buffer.getGraphics();
         graPixel.setClip(0, 0, getWidth(), getHeight());
-        this.scene1();
+        if(!this.endScene){
+            this.scene1();
+        }else{
+            this.allBlack();
+            System.out.println("si entroooo");
+        }
         graphics.drawImage(buffer, 0, 0, this);
     }
     private void pointsLocations(ArrayList<Location> locations,Color color){
@@ -365,13 +407,246 @@ public class Animation2d extends JFrame implements Runnable {
     }
     private void sceneAnimation1(){
         bodyX+=10;
-        bodyY-=10;
-        translateX += 10; // Traslación en X
-        translateY -= 10; // Traslación en Y
-        this.topCone();
-        this.squareBody();
-        this.rocketExhaust();
-        this.rocketWings();
+        if(this.times<=0){
+            bodyY-=10;
+            translateY -= 10;
+        }
+        scalation+=2;
+        //System.out.println(bodyY);
+        //this.ejemplo();
+        if(bodyY>-530){
+            this.topCone();
+            this.squareBody();
+            this.rocketExhaust();
+            this.rocketWings();
+            this.cactus1();
+            this.cactus2();
+            this.lineClouds();
+        }else{
+            this.endScene1();
+        }
+    }
+
+    private void ejemplo(){
+        this.locations.clear();
+        this.locations.add(new Location(100,100));
+        this.locations.add(new Location(200,100));
+        this.locations.add(new Location(200,200));
+        this.locations.add(new Location(100,200));
+        this.locations = transformations.CenterRotation(bodyY,locations,new Location(150,150));
+        int[][] square = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square,new Color(0,0,0));
+    }
+    private void sizes(){
+        if(size>320){
+            size-=10;
+            System.out.println(size);
+            setSize(getWidth(),size);
+        }else{
+            this.endSize=true;
+        }
+    }
+    private void endScene1(){
+        if(this.endSize){
+            if(counter<150){
+                ArrayList<Location> newPoint = new ArrayList<Location>();
+                newPoint.add(new Location(5, getHeight()));
+                counter+=5;
+                newPoint = transformations.Escalation(counter, 1, newPoint);
+
+                ArrayList<Location> result = new ArrayList<Location>();
+                result.add(new Location(5, 5));
+                result.add(new Location(5, getHeight()));
+                result.add(newPoint.get(0));
+                result.add(new Location(newPoint.get(0).pointX,0));
+                System.out.println(this.counter);
+                drawPolygon(result, Color.BLACK);
+                this.pointsLocations(result,Color.BLACK);
+                //Rellenar(2, 2, Color.BLACK,Color.BLACK);
+
+            }else{
+                this.endScene =true;
+            }
+        }else{
+            this.sizes();
+        }
+
+
+    }
+    void drawPolygon(ArrayList<Location> points, Color fillColor){
+        ArrayList<Location> newPoints = new ArrayList<Location>();
+        for (int i = 0; i < points.size(); i++){
+            ArrayList<Location> line = (i == points.size() - 1) ?
+                    g.bresenham(points.get(i), points.get(0)):
+                    g.bresenham(points.get(i), points.get(i+1));
+            newPoints.addAll(line);
+        }
+
+        for (int i = 0; i < newPoints.size(); i++)
+        {
+            putPixel(newPoints.get(i).pointX, newPoints.get(i).pointY, fillColor);
+        }
+    }
+    private void lineClouds(){
+        if(!this.endClouds){
+            translateX+=10;
+            // Crear los puntos iniciales de los círculos
+            ArrayList<Location> circle1Points;
+            Location circle2Center = new Location(391, 634);
+            this.locations.clear();
+            this.locations = generateEllipsePoints(350,600,radius,radius2);
+            circle1Points = new Transformations().translation(translateX*-1, 1, this.locations);
+            pointsLocations(circle1Points,Color.white);
+            this.locations.clear();
+            this.locations = generateEllipsePoints(323,600,radius,radius2);
+            circle1Points = new Transformations().translation(translateX*-1, 1, this.locations);
+            pointsLocations(circle1Points,Color.white);
+            this.locations.clear();
+            this.locations = generateEllipsePoints(391,600,radius,radius2);
+            circle1Points = new Transformations().translation(translateX, 1, this.locations);
+            pointsLocations(circle1Points,Color.white);
+            this.locations.clear();
+            this.locations = generateEllipsePoints(364,600,radius,radius2);
+            circle1Points = new Transformations().translation(translateX, 1, this.locations);
+            pointsLocations(circle1Points,Color.white);
+
+            if(radius<=24 && radius2<=21){
+                radius+=2;
+                radius2+=2;
+            }
+            if(translateX>=150){
+                translateX=1;
+                this.times-=1;
+            }
+            if(this.times<=0){
+                this.endClouds=true;
+            }
+        }
+
+
+    }
+    public ArrayList<Location> generateEllipsePoints(int centerX, int centerY, int radiusX, int radiusY) {
+        ArrayList<Location> ellipsePoints = new ArrayList<>();
+
+        for (int i = 0; i < 360; i++) {
+            double angle = 2 * Math.PI * i / 360;
+            int x = (int) (centerX + radiusX * Math.cos(angle));
+            int y = (int) (centerY + radiusY * Math.sin(angle));
+            ellipsePoints.add(new Location(x, y));
+        }
+
+        return ellipsePoints;
+    }
+
+    private void cactus1(){
+        this.locations.clear();
+        this.locations.add(new Location(165, 403));
+        this.locations.add(new Location(187, 403));
+        this.locations.add(new Location(187, 465));
+        this.locations.add(new Location(165, 465));
+        int[][] square = {
+                {this.locations.get(0).pointX, this.locations.get(0).pointY},
+                {this.locations.get(1).pointX, this.locations.get(1).pointY},
+                {this.locations.get(2).pointX, this.locations.get(2).pointY},
+                {this.locations.get(3).pointX, this.locations.get(3).pointY}
+        };
+        fillFigure(square, new Color(0, 129, 72));
+
+        this.locations.clear();
+        this.locations.add(new Location(143, 424));
+        this.locations.add(new Location(210, 424));
+        this.locations.add(new Location(210, 442));
+        this.locations.add(new Location(143, 442));
+        int[][] square2 = {
+                {this.locations.get(0).pointX, this.locations.get(0).pointY},
+                {this.locations.get(1).pointX, this.locations.get(1).pointY},
+                {this.locations.get(2).pointX, this.locations.get(2).pointY},
+                {this.locations.get(3).pointX, this.locations.get(3).pointY}
+        };
+        fillFigure(square2, new Color(0, 129, 72));
+
+        this.locations.clear();
+        this.locations.add(new Location(143, 415));
+        this.locations.add(new Location(153, 415));
+        this.locations.add(new Location(153, 424));
+        this.locations.add(new Location(143, 424));
+        int[][] square3 = {
+                {this.locations.get(0).pointX, this.locations.get(0).pointY},
+                {this.locations.get(1).pointX, this.locations.get(1).pointY},
+                {this.locations.get(2).pointX, this.locations.get(2).pointY},
+                {this.locations.get(3).pointX, this.locations.get(3).pointY}
+        };
+        fillFigure(square3, new Color(0, 129, 72));
+
+        this.locations.clear();
+        this.locations.add(new Location(200, 415));
+        this.locations.add(new Location(210, 415));
+        this.locations.add(new Location(210, 424));
+        this.locations.add(new Location(200, 424));
+        int[][] square4 = {
+                {this.locations.get(0).pointX, this.locations.get(0).pointY},
+                {this.locations.get(1).pointX, this.locations.get(1).pointY},
+                {this.locations.get(2).pointX, this.locations.get(2).pointY},
+                {this.locations.get(3).pointX, this.locations.get(3).pointY}
+        };
+        fillFigure(square4, new Color(0, 129, 72));
+
+    }
+
+    private void cactus2(){
+        this.locations.clear();
+        this.locations.add(new Location(565,403));
+        this.locations.add(new Location(587, 403));
+        this.locations.add(new Location(587, 465));
+        this.locations.add(new Location(565, 465));
+        int[][] square = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square,new Color(0, 129, 72));
+        this.locations.clear();
+        this.locations.add(new Location(543,424));
+        this.locations.add(new Location(610,424));
+        this.locations.add(new Location(610,442));
+        this.locations.add(new Location(543,442));
+        int[][] square2 = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square2,new Color(0, 129, 72));
+        this.locations.clear();
+        this.locations.add(new Location(543,415));
+        this.locations.add(new Location(553,415));
+        this.locations.add(new Location(553,424));
+        this.locations.add(new Location(543,424));
+        int[][] square3 = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square3,new Color(0, 129, 72));
+        this.locations.clear();
+        this.locations.add(new Location(600,415));
+        this.locations.add(new Location(610,415));
+        this.locations.add(new Location(610,424));
+        this.locations.add(new Location(600,424));
+        int[][] square4 = {
+                {this.locations.get(0).pointX,this.locations.get(0).pointY},//izq arriba
+                {this.locations.get(1).pointX,this.locations.get(1).pointY},
+                {this.locations.get(2).pointX,this.locations.get(2).pointY},
+                {this.locations.get(3).pointX,this.locations.get(3).pointY}
+        };
+        fillFigure(square4,new Color(0, 129, 72));
     }
     public static void main(String[] args) {
         Animation2d animation2d = new Animation2d();
@@ -383,6 +658,34 @@ public class Animation2d extends JFrame implements Runnable {
     public void run() {
         while (true) {
             repaint();
+        }
+    }
+
+    public void infitive(){
+        ArrayList<Location> locations =new ArrayList<>();
+        int x,y;
+        for (int t = 0; t<=360;t++){
+            double radians = Math.PI/180 * t;
+            double cos = Math.cos(radians);
+            double sin = Math.sin(radians);
+            x = (int) ((100 * sin) / (1 + (cos * cos)));
+            y = (int) ((100 * sin * cos) / (1 + (cos * cos)));
+            //System.out.println((x+450)+" , "+(y+450));
+            this.putPixel(x+200,y+100,Color.blue);
+            locations.add(new Location(x+200,y+100));
+        }
+        this.lines(locations);
+    }
+    private void lines(ArrayList<Location> points){
+        for (int i = 0; i < points.size()-1; i++){
+            ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));
+            drawPoints(locations);
+        }
+    }
+    public void drawPoints(ArrayList<Location> locations) {
+        for (Location point : locations) {
+            System.out.println((point.pointX) + " , " + (point.pointY));
+            putPixel(point.pointX, point.pointY,Color.white);
         }
     }
 }
