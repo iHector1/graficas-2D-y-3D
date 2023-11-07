@@ -31,7 +31,7 @@ public class Orthogonal extends JFrame {
         pointsXYZ.add(new Location3D(150, 250, 250));
 
         vector = new Location3D(8,7,20);
-
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) buffer.createGraphics();
     }
