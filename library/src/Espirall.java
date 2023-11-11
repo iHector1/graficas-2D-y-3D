@@ -47,8 +47,7 @@ public class Espirall extends JFrame {
         this.lines(pointsXY);
     }
     private void lines(ArrayList<Location> points){
-        for (int i = 0; i < points.size()-1; i++)
-        {
+        for (int i = 0; i < points.size()-1; i++){
             ArrayList<Location> locations = g.bresenham(points.get(i),points.get(i+1));
             drawPoints(locations);
         }

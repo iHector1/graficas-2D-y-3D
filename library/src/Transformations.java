@@ -41,10 +41,8 @@ public class Transformations {
         int n2 = inputMatrix[1].length;
         int[][] result = new int[m1][n2];
 
-        for (int i = 0; i < m1; i++)
-        {
-            for (int j = 0; j < n2; j++)
-            {
+        for (int i = 0; i < m1; i++){
+            for (int j = 0; j < n2; j++){
                 for (int k = 0; k < n1; k++)
                     result[i][j] += matrix[i][k] * inputMatrix[k][j];
             }
@@ -58,8 +56,7 @@ public class Transformations {
         double radian = Math.PI / 180 *theta;
         double[][] matrix = {{Math.cos(radian), - Math.sin(radian), 0}, {Math.sin(radian), Math.cos(radian), 0}, {0, 0, 1}};
 
-        for (int i = 0; i < size; i++)
-        {
+        for (int i = 0; i < size; i++){
             inputMatrix[0][i] = points.get(i).pointX;
             inputMatrix[1][i] = points.get(i).pointY;
             inputMatrix[2][i] = 1;
