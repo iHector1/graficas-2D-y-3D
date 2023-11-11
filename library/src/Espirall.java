@@ -20,7 +20,7 @@ public class Espirall extends JFrame {
 
         this.g = new Figures();
 
-        vector = new Location3D(1, 11, 37);
+        vector = new Location3D(1, 11, 70);
 
         buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) buffer.createGraphics();
@@ -32,15 +32,14 @@ public class Espirall extends JFrame {
     }
 
     private void drawCube(){
-        double step = (8 * Math.PI) / 100;
+        float step =(float) (8 * Math.PI) / 1000;
 
-        for (int i = 0; i <=100; i++){
-            double u =  (double) (i) / vector.pointZ;
-            double x =(double) (Math.cos(i) + (vector.pointX * u))*13;
-            double y = (double) (Math.sin(i)+ (vector.pointY * u))*9;
+        for (float i = 0; i <=8*Math.PI; i+=step){
+            float u =  (-i) / vector.pointZ;
+            float x =(float) (Math.cos(i) + (vector.pointX * u))*70;
+            float y = (float) (Math.sin(i)+ (vector.pointY * u))*40;
             System.out.println("x: "+x+" y: "+y);
-            pointsXY.add(new Location((int) x+200, (int) y+50));
-            step+=step;
+            pointsXY.add(new Location((int) x+200, (int) y+250));
         }
         for (Location point: pointsXY){
             putPixel(point.pointX, point.pointY);
@@ -65,7 +64,6 @@ public class Espirall extends JFrame {
         super.paint(graphics);
         drawCube();
     }
-
     public static void main(String[] args) {
         new Espirall();
     }
