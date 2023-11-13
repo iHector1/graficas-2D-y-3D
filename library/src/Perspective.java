@@ -9,8 +9,8 @@ public class Perspective extends JFrame {
     private Graphics graphics;
     private ArrayList<Location> pointsXY = new ArrayList<Location>();
     private ArrayList<Location3D> pointsXYZ = new ArrayList<Location3D>();
-    private Location3D vector;
     private Figures g;
+    private Location3D position;
     public Perspective(){
         color = Color.red;
         setTitle("Proyección Perspectiva");
@@ -30,7 +30,6 @@ public class Perspective extends JFrame {
         pointsXYZ.add(new Location3D(50, 250, 250));
         pointsXYZ.add(new Location3D(150, 250, 250));
 
-        vector = new Location3D(8,7,20);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) buffer.createGraphics();
@@ -41,12 +40,15 @@ public class Perspective extends JFrame {
     }
 
     private void drawCube(){
+        position = new Location3D(4,5,-20);
         for (int i = 0; i < pointsXYZ.size(); i++){
-            float u = 0;
-            float y = pointsXYZ.get(i).pointY + (vector.pointY * u);
-            float z = pointsXYZ.get(i).pointZ + (vector.pointZ * u);
+            float aux = pointsXYZ.get(i).pointZ - position.pointZ;
+            float u = (-position.pointZ) / aux;
+            float x = position.pointX + ((pointsXYZ.get(i).pointX - position.pointX)*(u));
+            float y = position.pointY + ((pointsXYZ.get(i).pointY - position.pointY)*(u));
 
-            pointsXY.add(new Location((int) y, (int) z));
+            System.out.println("X: " + (int)x + " Y: " + (int)y);
+            pointsXY.add(new Location((int) (x * 10)+100, (int) (y * 10)+50));
         }
         for (Location point: pointsXY){
             putPixel(point.pointX, point.pointY);
@@ -70,7 +72,6 @@ public class Perspective extends JFrame {
         ArrayList<Location> pointsHD = g.bresenham(pointsXY.get(7), pointsXY.get(3));
 
         ArrayList<Location> points = pointsAB;
-        points.addAll(pointsAC);
         points.addAll(pointsAC);
         points.addAll(pointsAE);
         points.addAll(pointsBD);
