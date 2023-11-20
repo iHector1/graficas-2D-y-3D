@@ -33,7 +33,7 @@ public class Fill3D extends JFrame implements Runnable {
         pointsXYZ.add(new Location3D(50, 250, 250));//g 6
         pointsXYZ.add(new Location3D(150, 250, 250));//h 7
 
-        vector = new Location3D(8,7,20);
+        vector = new Location3D(8,20,80);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         bufferImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         graphics = (Graphics2D) bufferImage.createGraphics();
