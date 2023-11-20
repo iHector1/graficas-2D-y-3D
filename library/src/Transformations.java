@@ -102,22 +102,41 @@ public class Transformations {
                     new Location(result[0][i] + center.pointX, result[1][i] + center.pointY));
         return resultList;
     }
-    public ArrayList<Location> translation3D(int dx, int dy, ArrayList<Location> points) {
-        ArrayList<Location> resultList = new ArrayList<Location>();
+    public ArrayList<Location3D> translation3D(int dx, int dy,int dz, ArrayList<Location3D> points) {
+        ArrayList<Location3D> resultList = new ArrayList<Location3D>();
         int size = points.size();
-        int[][] inputMatrix = new int[3][size];
-        int[][] matrix = {{1, 0, dx}, {0, 1, dy}, {0, 0, 1}};
+        int[][] inputMatrix = new int[4][size];
+        int[][] matrix = {{1, 0,0,dx}, {0, 1,0, dy}, {0, 0, 1,dz},{0,0,0,1}};
 
         for (int i = 0; i < size; i++){
             inputMatrix[0][i] = points.get(i).pointX;
             inputMatrix[1][i] = points.get(i).pointY;
-            inputMatrix[2][i] = 1;
+            inputMatrix[2][i] = points.get(i).pointZ;
+            inputMatrix[3][i] = 1;
         }
         int[][] result = multiplyMatrices(matrix, inputMatrix);
         for(int i = 0; i < size; i++) {
             resultList.add(
-                    new Location(result[0][i], result[1][i]));
+                    new Location3D(result[0][i], result[1][i],result[2][i]));
         }
+        return resultList;
+    }
+    public static ArrayList<Location3D> Escalation3D(float sx, float sy, float sz,ArrayList<Location3D> points){
+        ArrayList<Location3D> resultList = new ArrayList<Location3D>();
+        int size = points.size();
+        int[][] inputMatrix = new int[4][size];
+        double[][] matrix = {{sx, 0, 0, 0}, {0, sy, 0, 0}, {0, 0, sz, 0},{0, 0, 0, 1}};
+
+        for (int i = 0; i < size; i++){
+            inputMatrix[0][i] = points.get(i).pointX;
+            inputMatrix[1][i] = points.get(i).pointY;
+            inputMatrix[2][i] = points.get(i).pointZ;
+            inputMatrix[3][i] = 1;
+        }
+        int[][] result = multiplyMatrices(matrix, inputMatrix);
+        for(int i = 0; i < size; i++)
+            resultList.add(
+                    new Location3D(result[0][i], result[1][i],result[2][i]));
         return resultList;
     }
 }

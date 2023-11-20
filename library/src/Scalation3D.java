@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
-public class Traslation3D extends JFrame implements Runnable {
+public class Scalation3D extends JFrame implements Runnable {
     private Color color, disponible;
-    private int incX,incY,incZ;
+    private float incX,incY,incZ;
     private BufferedImage bufferImage;
     private Image buffer;
     private Graphics graphics;
@@ -19,25 +19,25 @@ public class Traslation3D extends JFrame implements Runnable {
     private Graphics graPixel;
     private Transformations transformations;
 
-    public Traslation3D() {
+    public Scalation3D() {
         color = Color.red;
-        setTitle("Traslacion 3D");
+        setTitle("Fill 3D");
         setSize(450, 450);
         setLayout(null);
         setVisible(true);
 
         this.g = new Figures();
         //first square
-        pointsXYZ.add(new Location3D(50, 150, 150));//a 0
-        pointsXYZ.add(new Location3D(150, 150, 150));//b 1
-        pointsXYZ.add(new Location3D(50, 250, 150));//c 2
-        pointsXYZ.add(new Location3D(150, 250, 150));//d 3
+        pointsXYZ.add(new Location3D(50, 150, 50));//a 0
+        pointsXYZ.add(new Location3D(150, 150, 50));//b 1
+        pointsXYZ.add(new Location3D(50, 250, 50));//c 2
+        pointsXYZ.add(new Location3D(150, 250, 50));//d 3
         //second square
-        pointsXYZ.add(new Location3D(50, 150, 250));//e 4
-        pointsXYZ.add(new Location3D(150, 150, 250));//f 5
-        pointsXYZ.add(new Location3D(50, 250, 250));//g 6
-        pointsXYZ.add(new Location3D(150, 250, 250));//h 7
-
+        pointsXYZ.add(new Location3D(50, 150, 150));//e 4
+        pointsXYZ.add(new Location3D(150, 150, 150));//f 5
+        pointsXYZ.add(new Location3D(50, 250, 150));//g 6
+        pointsXYZ.add(new Location3D(150, 250, 150));//h 7
+        incX = incY = 1;
         transformations = new Transformations();
         vector = new Location3D(8, 7, 20);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -56,7 +56,7 @@ public class Traslation3D extends JFrame implements Runnable {
     }
 
     private void drawCube() {
-        pointsXYZ = transformations.translation3D(incX,incY,incZ,pointsXYZ);
+        pointsXYZ = Transformations.Escalation3D(incX,incY,incZ,pointsXYZ);
         for (int i = 0; i < pointsXYZ.size(); i++) {
             float u = (float) (pointsXYZ.get(i).pointZ) / vector.pointZ;
             float x = pointsXYZ.get(i).pointX + (vector.pointX * u);
@@ -199,8 +199,8 @@ public class Traslation3D extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        Traslation3D traslation3D = new Traslation3D();
-        Thread thread = new Thread(traslation3D);
+        Scalation3D scalation3D = new Scalation3D();
+        Thread thread = new Thread(scalation3D);
         thread.start();
     }
 
@@ -217,13 +217,13 @@ public class Traslation3D extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (incX<50) {
+        while (incX<1.0240011) {
             try {
-                incX+=1;
-                incY-=1;
+                incX+=.001;
+                incY+=.001;
                 incZ=1;
                 repaint();
-                sleep(1000);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }catch (Exception e){

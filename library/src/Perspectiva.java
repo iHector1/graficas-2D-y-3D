@@ -79,8 +79,8 @@ public class Perspectiva extends JFrame implements Runnable{
 
         if(animarCubo){
             //animRotar(g);
-            animTrasladar(g);
-            //animEscalar(g);
+            //animTrasladar(g);
+            animEscalar(g);
         }
         this.getGraphics().drawImage(this.animacion, 0, 0, this);
 
