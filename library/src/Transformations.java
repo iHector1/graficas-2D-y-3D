@@ -139,4 +139,116 @@ public class Transformations {
                     new Location3D(result[0][i], result[1][i],result[2][i]));
         return resultList;
     }
+    public  ArrayList<Location3D> Rotacion3D(ArrayList<Location3D> coordenadas, int a, char e){
+        ArrayList<Location3D>  result = new ArrayList<>();
+        Double r[]={0.0,0.0,0.0};
+        int size = coordenadas.size();
+        int[][] inputMatrix = new int[4][size];
+        Double [][] T=new Double[4][4];
+        for (int i = 0; i < size; i++){
+            inputMatrix[0][i] = coordenadas.get(i).pointX;
+            inputMatrix[1][i] = coordenadas.get(i).pointY;
+            inputMatrix[2][i] = coordenadas.get(i).pointZ;
+            inputMatrix[3][i] = 1;
+        }
+        Double[][] Tx={
+                {1.0,0.0,0.0,0.0},
+                {0.0,Math.cos(Math.toRadians(a)),Math.sin(Math.toRadians(a)),0.0},
+                {0.0,-Math.sin(Math.toRadians(a)),Math.cos(Math.toRadians(a)),0.0},
+                {0.0,0.0,0.0,1.0}
+        };
+        Double[][] Ty={
+                {Math.cos(Math.toRadians(a)),0.0,-Math.sin(Math.toRadians(a)),0.0},
+                {0.0,1.0,0.0,0.0},
+                {Math.sin(Math.toRadians(a)),0.0,Math.cos(Math.toRadians(a)),0.0},
+                {0.0,0.0,0.0,1.0}
+        };
+        Double[][] Tz={
+                {Math.cos(Math.toRadians(a)),Math.sin(Math.toRadians(a)),0.0,0.0},
+                {-Math.sin(Math.toRadians(a)),Math.cos(Math.toRadians(a)),0.0,0.0},
+                {0.0,0.0,1.0,0.0},
+                {0.0,0.0,0.0,1.0}
+        };
+
+        switch(e){
+            case 'x':
+                T=Tx;
+                break;
+            case 'y':
+                T=Ty;
+                break;
+            case 'z':
+                T=Tz;
+                break;
+        }
+        for (int m = 0; m < size; m++) {
+            // Multiplicación de matrices
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    r[i] += inputMatrix[j][m] * T[i][j];
+                }
+            }
+
+            // Agregar el resultado a la lista de resultados
+            result.add(new Location3D(r[0], r[1], r[2]));
+        }
+
+        return result; // Devolver la lista de coordenadas transformadas
+
+    }
+
+
+    public ArrayList<Location3D> multiplicarPorMatriz(ArrayList<Location3D> coordenadas, int a) {
+        ArrayList<Location3D> resultado = new ArrayList<>();
+
+        Double[][] Tx = {
+                {Math.cos(Math.toRadians(a)),0.0,-Math.sin(Math.toRadians(a)),0.0},
+                {0.0,1.0,0.0,0.0},
+                {Math.sin(Math.toRadians(a)),0.0,Math.cos(Math.toRadians(a)),0.0},
+                {0.0,0.0,0.0,1.0}
+        };
+
+        for (Location3D punto : coordenadas) {
+            // Crear una matriz con las coordenadas del punto
+            Double[][] inputMatrix = {
+                    {(double) punto.pointX},
+                    {(double) punto.pointY},
+                    {(double) punto.pointZ},
+                    {1.0} // Coordenada homogénea
+            };
+
+            // Realizar la multiplicación de matrices
+            Double[][] resultadoMatriz = multiplicarMatrices(Tx, inputMatrix);
+
+            // Crear un nuevo Location3D con los resultados y agregarlo al ArrayList
+            Location3D resultadoPunto = new Location3D(
+                    resultadoMatriz[0][0].intValue(),
+                    resultadoMatriz[1][0].intValue(),
+                    resultadoMatriz[2][0].intValue()
+            );
+            resultado.add(resultadoPunto);
+        }
+
+        return resultado;
+    }
+
+    // Método para multiplicar matrices (función auxiliar)
+    private Double[][] multiplicarMatrices(Double[][] matriz1, Double[][] matriz2) {
+        int m1Rows = matriz1.length;
+        int m1Cols = matriz1[0].length;
+        int m2Cols = matriz2[0].length;
+
+        Double[][] resultado = new Double[m1Rows][m2Cols];
+
+        for (int i = 0; i < m1Rows; i++) {
+            for (int j = 0; j < m2Cols; j++) {
+                resultado[i][j] = 0.0;
+                for (int k = 0; k < m1Cols; k++) {
+                    resultado[i][j] += matriz1[i][k] * matriz2[k][j];
+                }
+            }
+        }
+
+        return resultado;
+    }
 }

@@ -78,9 +78,9 @@ public class Perspectiva extends JFrame implements Runnable{
         animacion=new BufferedImage(this.getWidth(),500,BufferedImage.TYPE_INT_RGB);
 
         if(animarCubo){
-            //animRotar(g);
+            animRotar(g);
             //animTrasladar(g);
-            animEscalar(g);
+            //animEscalar(g);
         }
         this.getGraphics().drawImage(this.animacion, 0, 0, this);
 
@@ -597,7 +597,7 @@ public class Perspectiva extends JFrame implements Runnable{
                 paraleloCentros(300.0,400.0);
                 paralelaCubo(this.coordenadas,300.0,400.0);
 
-                //RellenarCubo();
+                inundarCubo();
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
                 hilo.sleep(10);
             } catch (InterruptedException ex) {
@@ -608,7 +608,6 @@ public class Perspectiva extends JFrame implements Runnable{
         this.coordenadas=auxCoordenadas.clone();
         this.centros=this.auxCentros.clone();
 
-        /*
        //Sin rellenar
         for(int i=1;i<361;i++){
             animacion = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
@@ -627,7 +626,7 @@ public class Perspectiva extends JFrame implements Runnable{
                 //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        */
+
     }
 
     public void inundacion(int x, int y, Color c){

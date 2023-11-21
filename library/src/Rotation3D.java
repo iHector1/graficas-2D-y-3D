@@ -2,12 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.lang.Thread.sleep;
 
-public class Scalation3D extends JFrame implements Runnable {
+public class Rotation3D extends JFrame implements Runnable {
     private Color color, disponible;
     private float incX,incY,incZ;
+    private Thread thread;
     private BufferedImage bufferImage;
     private Image buffer;
     private Graphics graphics;
@@ -18,10 +20,11 @@ public class Scalation3D extends JFrame implements Runnable {
     private Figures g;
     private Graphics graPixel;
     private Transformations transformations;
+    private int counter;
 
-    public Scalation3D() {
+    public Rotation3D() {
         color = Color.red;
-        setTitle("Fill 3D");
+        setTitle("Rotacion 3D");
         setSize(450, 450);
         setLayout(null);
         setVisible(true);
@@ -63,7 +66,7 @@ public class Scalation3D extends JFrame implements Runnable {
 
             pointsXY.add(new Location((int) x, (int) y));
         }
-        pointsXYZ = Transformations.Escalation3D(incX,incY,incZ,pointsXYZ);
+        pointsXY = Transformations.CenterRotation(counter, pointsXY, new Location(166, 233));
         for (Location point : pointsXY) {
             putPixel(point.pointX, point.pointY);
         }
@@ -95,97 +98,6 @@ public class Scalation3D extends JFrame implements Runnable {
         pointsXY.clear();
     }
 
-    private void fillFigure(int[][] points, Color color) {
-        int n = points.length;
-        int startX = Integer.MAX_VALUE;
-        int startY = Integer.MAX_VALUE;
-        int endX = Integer.MIN_VALUE;
-        int endY = Integer.MIN_VALUE;
-
-        // Find the bounding box of the rotated figure
-        for (int i = 0; i < n - 1; i++) {
-            int x = points[i][0];
-            int y = points[i][1];
-            startX = Math.min(startX, x);
-            startY = Math.min(startY, y);
-            endX = Math.max(endX, x);
-            endY = Math.max(endY, y);
-        }
-
-        int direction = 0; // 0: right, 1: down, 2: left, 3: up
-        int x = startX;
-        int y = startY;
-
-        while (startX <= endX && startY <= endY) {
-            // Paint pixels in the current direction
-            while (x >= startX && x <= endX && y >= startY && y <= endY) {
-                if (isInsidePolygon(x, y, points)) {
-                    putPixel(x, y, color);
-                }
-                // Move to the next pixel in the current direction
-                switch (direction) {
-                    case 0:
-                        x++;
-                        break;
-                    case 1:
-                        y++;
-                        break;
-                    case 2:
-                        x--;
-                        break;
-                    case 3:
-                        y--;
-                        break;
-                }
-            }
-
-            // Update the bounding box based on the current direction
-            switch (direction) {
-                case 0:
-                    startY++;
-                    x--;
-                    y++;
-                    break;
-                case 1:
-                    endX--;
-                    x--;
-                    y--;
-                    break;
-                case 2:
-                    endY--;
-                    x++;
-                    y--;
-                    break;
-                case 3:
-                    startX++;
-                    x++;
-                    y++;
-                    break;
-            }
-
-            // Change direction (right -> down -> left -> up)
-            direction = (direction + 1) % 4;
-        }
-    }
-
-    private boolean isInsidePolygon(int x, int y, int[][] points) {
-        int n = points.length;
-        boolean isInside = false;
-
-        for (int i = 0, j = n - 1; i < n; j = i++) {
-            int xi = points[i][0];
-            int yi = points[i][1];
-            int xj = points[j][0];
-            int yj = points[j][1];
-
-            if (((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
-                isInside = !isInside;
-            }
-        }
-
-        return isInside;
-
-    }
 
 
     @Override
@@ -199,7 +111,7 @@ public class Scalation3D extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        Scalation3D scalation3D = new Scalation3D();
+        Rotation3D scalation3D = new Rotation3D();
         Thread thread = new Thread(scalation3D);
         thread.start();
     }
@@ -217,18 +129,69 @@ public class Scalation3D extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while (incX<1.0240011) {
-            try {
-                incX+=.001;
-                incY+=.001;
-                incZ=1;
+        while (true){
+            try{
                 repaint();
-                sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }catch (Exception e){
-                System.out.println("algo salio mal");
+                thread.sleep(10);
+                if (++counter == 360) counter = 0;
+            }
+            catch (InterruptedException e) {}
+        }
+    }
+
+    public void fillFigure(int[][] square, Color color) {
+        int minY = getMinY(square);
+        int maxY = getMaxY(square);
+
+
+        for (int y = minY; y <= maxY; y++) {
+
+            int[] intersections = findIntersections(square, y);
+            for (int i = 0; i < intersections.length - 1; i += 2) {
+                int startX = intersections[i];
+                int endX = intersections[i + 1];
+
+                for (int x = startX; x <= endX; x++) {
+                    putPixel(x, y, color);
+                }
             }
         }
     }
+    private int getMinY(int[][] square) {
+        int minY = Integer.MAX_VALUE;
+        for (int[] point : square) {
+            minY = Math.min(minY, point[1]);
+        }
+        return minY;
+    }
+
+    private int getMaxY(int[][] square) {
+        int maxY = Integer.MIN_VALUE;
+        for (int[] point : square) {
+            maxY = Math.max(maxY, point[1]);
+        }
+        return maxY;
+    }
+
+    private int[] findIntersections(int[][] square, int y) {
+
+        int[] intersections = new int[square.length * 2];
+        int index = 0;
+        for (int i = 0; i < square.length; i++) {
+            int nextIndex = (i == square.length - 1) ? 0 : i + 1;
+
+            int x1 = square[i][0];
+            int y1 = square[i][1];
+            int x2 = square[nextIndex][0];
+            int y2 = square[nextIndex][1];
+
+            if ((y1 <= y && y2 > y) || (y1 > y && y2 <= y)) {
+                double intersectX = ((double)(y - y1) / (y2 - y1)) * (x2 - x1) + x1;
+                intersections[index++] = (int) intersectX;
+            }
+        }
+        Arrays.sort(intersections, 0, index);
+        return Arrays.copyOf(intersections, index);
+    }
+
 }
