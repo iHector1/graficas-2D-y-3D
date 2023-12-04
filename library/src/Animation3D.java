@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
+import static java.lang.Thread.sleep;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -21,6 +23,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     private Color color, disponible;
     private ArrayList<Location> pointsXY = new ArrayList<Location>();
     int x , y,z;
+    private float incX, incY, incZ;
     Double a=-25.0,b=15.0;
     Double [][] coordenadas={   {a,a,a,1.0}, //A0
             {a,a,b,1.0}, //B1
@@ -85,6 +88,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     Double [][] centrosT,centrosPT,auxCentrosT=new Double[6][4];
     private Location3D vector;
     private Figures g;
+    private boolean loading;
+    private Transformations transformations;
     private ArrayList<Location3D> pointsXYZ = new ArrayList<Location3D>();
     public Animation3D(){
 
@@ -115,11 +120,21 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         hilo.start();
 
 
-
+//first square
+        pointsXYZ.add(new Location3D(50, 150, 50));//a 0
+        pointsXYZ.add(new Location3D(150, 150, 50));//b 1
+        pointsXYZ.add(new Location3D(50, 250, 50));//c 2
+        pointsXYZ.add(new Location3D(150, 250, 50));//d 3
+        //second square
+        pointsXYZ.add(new Location3D(50, 150, 150));//e 4
+        pointsXYZ.add(new Location3D(150, 150, 150));//f 5
+        pointsXYZ.add(new Location3D(50, 250, 150));//g 6
+        pointsXYZ.add(new Location3D(150, 250, 150));//h 7
+        incX = incY = 1;
+        transformations = new Transformations();
+        vector= new Location3D(8, 7, 20);
+        loading= false;
         this.g = new Figures();
-        this.y=300;
-        this.z=130;
-        vector = new Location3D(x,y ,z);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyListener(this);
@@ -367,7 +382,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         centros[5][3]=1.0;
     }
 
-    public void paraleloCentros(Double Xa, Double Ya){
+    public void paraleloCentros(){
 
         centrosP = new Double [6][2];
         Double t;
@@ -549,13 +564,13 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             animacion = new BufferedImage(800, 800, BufferedImage.TYPE_INT_RGB);
             animacion.setData(temp.getRaster());
             //gameboy();
-            cubosQbert();//Estructura del nivel
-
+           // cubosQbert();//Estructura del nivel
+            cubes();
             //Diapositiva12();
             try{
                 Rotacion(this.coordenadas,1,'y');
                 Rotacion(this.centros,1,'y');
-                paraleloCentros(150.0,100.0);
+                paraleloCentros();
                 paralelaCubo(this.coordenadas,150.0,100.0);
                 RellenarCubo();
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
@@ -569,7 +584,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     public void cubosQbert(){
 
         /*Fila 1*/
-        paraleloCentros(300.0,200.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,300.0,200.0);
         inundacion(301, 195, Color.BLUE);
         inundacion(301, 201, Color.GRAY);
@@ -577,13 +592,13 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
 
         /*Fila 2*/
-        paraleloCentros(250.0,275.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,250.0,275.0);
         inundacion(251, 246, Color.BLUE);
         inundacion(251, 276, Color.GRAY);
         inundacion(246, 276, Color.CYAN);
 
-        paraleloCentros(345.0,300.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,345.0,300.0);
         inundacion(346, 295, Color.BLUE);
         inundacion(346, 301, Color.GRAY);
@@ -591,21 +606,21 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
 
         /*Fila 3*/
-        paraleloCentros(300.0,375.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,300.0,375.0);
         inundacion(301, 370, Color.BLUE);
         inundacion(301, 376, Color.GRAY);
         inundacion(296, 376, Color.CYAN);
 
 
-        paraleloCentros(205.0,352.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,205.0,352.0);
         inundacion(206, 347, Color.BLUE);
         inundacion(206, 353, Color.GRAY);
         inundacion(201, 353, Color.CYAN);
 
 
-        paraleloCentros(394.0,399.0);
+        paraleloCentros();
         paralelaCubo(coorCubos,394.0,399.0);
         inundacion(395, 394, Color.BLUE);
         inundacion(395, 400, Color.GRAY);
@@ -613,18 +628,28 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
 
     }
-    private void loading(){}
+    private void loading(){
+
+
+    }
     public static void main(String[] args){
         new Animation3D();
     }
 
     @Override
     public void run(){
-        while(true){
-            try{
+        while (incX < 1.0720034) {
+            try {
+                incX += .001;
+                incY = 1;
+                incZ = 1;
+                System.out.println(incX);
                 repaint();
-                hilo.sleep(100);
-            }catch(InterruptedException ex){
+                sleep(150);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.out.println("algo salio mal");
             }
         }
     }
@@ -634,6 +659,48 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
     }
 
+    private void cubes(){
+        for (int i = 0; i < pointsXYZ.size(); i++) {
+            float u = (float) (pointsXYZ.get(i).pointZ) / vector.pointZ;
+            float x = (pointsXYZ.get(i).pointX + (vector.pointX * u)) / 3;
+            float y = (pointsXYZ.get(i).pointY + (vector.pointY * u)) / 3;
+            pointsXY.add(new Location((int) x + 50, (int) y + 300));
+        }
+        pointsXYZ.set(0,new Location3D(50, 150, 50));
+        pointsXYZ.set(2,new Location3D(50, 250, 50));
+        pointsXYZ.set(4,new Location3D(50, 150, 150));
+        pointsXYZ.set(6,new Location3D(50, 250, 150));
+
+        pointsXYZ = Transformations.Escalation3D(incX, incY, incZ, pointsXYZ);
+        for (Location point : pointsXY) {
+            putPixel(point.pointX, point.pointY,Color.black);
+        }
+
+        int square[][] = {
+                {pointsXY.get(0).pointX, pointsXY.get(0).pointY},
+                {pointsXY.get(1).pointX, pointsXY.get(1).pointY},
+                {pointsXY.get(5).pointX, pointsXY.get(5).pointY},
+                {pointsXY.get(4).pointX, pointsXY.get(4).pointY}
+        };
+        fillFigure(square, Color.BLUE);
+        int square2[][] = {
+                {pointsXY.get(0).pointX, pointsXY.get(0).pointY},
+                {pointsXY.get(4).pointX, pointsXY.get(4).pointY},
+                {pointsXY.get(6).pointX, pointsXY.get(6).pointY},
+                {pointsXY.get(2).pointX, pointsXY.get(2).pointY}
+
+        };
+        fillFigure(square2, Color.white);
+        int square3[][] = {
+                {pointsXY.get(4).pointX, pointsXY.get(4).pointY},
+                {pointsXY.get(5).pointX, pointsXY.get(5).pointY},
+                {pointsXY.get(7).pointX, pointsXY.get(7).pointY},
+                {pointsXY.get(6).pointX, pointsXY.get(6).pointY}
+
+        };
+        fillFigure(square3, Color.GRAY);
+        pointsXY.clear();
+    }
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getKeyCode()) {
@@ -666,6 +733,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         }
         System.out.println(keyEvent.getKeyCode());
     }
+
+
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
