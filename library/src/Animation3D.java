@@ -75,7 +75,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             {200.0,200.0,-500.0},
             {-200.0,-200.0,500.0}
     };
-    Double Xa=150.0,Ya=100.0;
+    Double Xa=250.0,Ya=275.0;
     int indexZ;
     private boolean animarCubo=false;
     Double [][] auxCoordenadas=new Double[8][4];
@@ -91,6 +91,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     private boolean loading;
     private Transformations transformations;
     private ArrayList<Location3D> pointsXYZ = new ArrayList<Location3D>();
+    private int time;
+
     public Animation3D(){
 
         setTitle("Qbert");
@@ -110,7 +112,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         determinarCentrosEsc();
         auxCoordenadasEsc=coordenadasEsc.clone();
         auxCentrosEsc=centrosEsc.clone();
-
+        this.time = 100;
         centrosT=new Double[6][4];
         determinarCentrosT();
         auxCoordenadasT=coordenadasT.clone();
@@ -539,7 +541,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         return new Color(animacion.getRGB(x, y));
     }
 
-    public void RellenarCubo(){
+    public void RellenarCubo(Double Xa,Double Ya){
         if(indexZ!=0&&indexZ!=1&&indexZ!=2&&indexZ!=3)inundacion((int)(Xa-centrosP[0][0]),(int)(Ya-centrosP[0][1]),Color.CYAN);
         if(indexZ!=1&&indexZ!=3&&indexZ!=5&&indexZ!=7)inundacion((int)(Xa-centrosP[1][0]),(int)(Ya-centrosP[1][1]),Color.GRAY);
         if(indexZ!=4&&indexZ!=5&&indexZ!=6&&indexZ!=7)inundacion((int)(Xa-centrosP[2][0]),(int)(Ya-centrosP[2][1]),Color.CYAN);
@@ -563,18 +565,24 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
             animacion = new BufferedImage(800, 800, BufferedImage.TYPE_INT_RGB);
             animacion.setData(temp.getRaster());
-            //gameboy();
-            cubosQbert();//Estructura del nivel
-            //cubes();
-            //Diapositiva12();
+            gameboy();
+
             try{
-                Rotacion(this.coordenadas,1,'y');
-                Rotacion(this.centros,1,'y');
-                paraleloCentros();
-                paralelaCubo(this.coordenadas,150.0,100.0);
-                RellenarCubo();
+                if(incX<1.1190056){
+                    cubes();
+                    Rotacion(this.coordenadas,1,'y');
+                    Rotacion(this.centros,1,'y');
+                    paraleloCentros();
+                    paralelaCubo(this.coordenadas,400.0,275.0);
+                    RellenarCubo(400.0,275.0);
+                    this.time+= 1000/60;
+                }else{
+                    cubosQbert();//Estructura del nivel
+                    time = 20;
+                }
+
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
-                hilo.sleep(10);
+                hilo.sleep(this.time);
             } catch (InterruptedException ex) {
                 //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -684,12 +692,13 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
     @Override
     public void run(){
-        while (incX < 1.0720034) {
+        while (true) {
             try {
                 incX += .001;
                 incY = 1;
                 incZ = 1;
                 repaint();
+                System.out.println(incX);
                 sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -709,7 +718,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             float u = (float) (pointsXYZ.get(i).pointZ) / vector.pointZ;
             float x = (pointsXYZ.get(i).pointX + (vector.pointX * u)) / 3;
             float y = (pointsXYZ.get(i).pointY + (vector.pointY * u)) / 3;
-            pointsXY.add(new Location((int) x + 50, (int) y + 300));
+            pointsXY.add(new Location((int) x + 80, (int) y + 300));
         }
         pointsXYZ.set(0,new Location3D(50, 150, 50));
         pointsXYZ.set(2,new Location3D(50, 250, 50));
