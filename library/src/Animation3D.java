@@ -132,7 +132,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         pointsXYZ.add(new Location3D(150, 250, 150));//h 7
         incX = incY = 1;
         transformations = new Transformations();
-        vector= new Location3D(8, 7, 20);
+        vector= new Location3D(200.0,300.0,450.0);
         loading= false;
         this.g = new Figures();
         setVisible(true);
@@ -564,8 +564,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             animacion = new BufferedImage(800, 800, BufferedImage.TYPE_INT_RGB);
             animacion.setData(temp.getRaster());
             //gameboy();
-           // cubosQbert();//Estructura del nivel
-            cubes();
+            cubosQbert();//Estructura del nivel
+            //cubes();
             //Diapositiva12();
             try{
                 Rotacion(this.coordenadas,1,'y');
@@ -582,8 +582,54 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     }
 
     public void cubosQbert(){
+        double initialX = 400.0; // Coordenada X inicial para la primera figura
+        double initialY = 300.0; // Coordenada Y inicial para la primera figura
+        double deltaY = 99; // Espaciado vertical entre filas
+        int cuadros = 4;
 
-        /*Fila 1*/
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < cuadros; i++) { // Generar tres filas
+                paraleloCentros(); // Incremento de X para cada fila
+                paralelaCubo(coorCubos, initialX + (i * 50.0), initialY + (i * deltaY)); // Dibujo de la figura en la fila
+
+                // Calculando los valores para inundacion()
+                int x = (int) (initialX + (i * 50.0)) + 1;
+                int y1 = (int) (initialY + (i * deltaY)) - 5;
+                int y2 = (int) (initialY + (i * deltaY)) + 5;
+                inundacion(x, y1, Color.BLUE);
+                inundacion(x, y2, Color.PINK);
+                inundacion(x - 5, y2, Color.LIGHT_GRAY);
+            }
+            initialX-=45;
+            initialY+=78;
+            cuadros --;
+        }
+
+/*
+// Generando la fila adicional de 6 figuras a la derecha
+        double newX = initialX + (2 * 50.0); // Coordenada X para la nueva fila
+        double newY = initialY - deltaY * 1.2; // Coordenada Y para la nueva fila
+
+        for (int i = 0; i < extraRow; i++) {
+            paraleloCentros();
+
+            for (int j = 0; j < 3; j++) {
+                paralelaCubo(coorCubos, newX, newY + (i * deltaY));
+                int x = (int) newX + 1 + (j * 5);
+                int y1 = (int) (newY + (i * deltaY)) - 10;
+                int y2 = (int) (newY + (i * deltaY)) + 10;
+                inundacion(x, y1, colors[j]);
+                inundacion(x, y2, colors[j]);
+                inundacion(x - 5, y2, colors[j]);
+            }
+        }
+
+*/
+
+        /*
+
+
+        *//*Fila 1*//*
         paraleloCentros();
         paralelaCubo(coorCubos,300.0,200.0);
         inundacion(301, 195, Color.BLUE);
@@ -591,7 +637,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         inundacion(295, 201, Color.CYAN);
 
 
-        /*Fila 2*/
+        *//*Fila 2*//*
         paraleloCentros();
         paralelaCubo(coorCubos,250.0,275.0);
         inundacion(251, 246, Color.BLUE);
@@ -605,7 +651,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         inundacion(341, 301, Color.CYAN);
 
 
-        /*Fila 3*/
+        *//*Fila 3*//*
         paraleloCentros();
         paralelaCubo(coorCubos,300.0,375.0);
         inundacion(301, 370, Color.BLUE);
@@ -625,7 +671,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         inundacion(395, 394, Color.BLUE);
         inundacion(395, 400, Color.GRAY);
         inundacion(389, 400, Color.CYAN);
-
+*/
 
     }
     private void loading(){
@@ -643,7 +689,6 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
                 incX += .001;
                 incY = 1;
                 incZ = 1;
-                System.out.println(incX);
                 repaint();
                 sleep(150);
             } catch (InterruptedException e) {
@@ -731,7 +776,6 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             default:
                 break;
         }
-        System.out.println(keyEvent.getKeyCode());
     }
 
 
