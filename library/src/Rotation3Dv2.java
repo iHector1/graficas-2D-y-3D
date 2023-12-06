@@ -24,7 +24,7 @@ public class Rotation3Dv2 extends JFrame implements Runnable{
             {b,b,a,1.0}, //G6
             {b,b,b,1.0}, //H7
     };
-
+//figuros
     Double [][] d={ {200.0,200.0,300.0},
             {200.0,200.0,-300.0},
             {-200.0,-200.0,300.0}

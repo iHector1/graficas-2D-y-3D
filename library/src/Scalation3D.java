@@ -21,7 +21,7 @@ public class Scalation3D extends JFrame implements Runnable {
 
     public Scalation3D() {
         color = Color.red;
-        setTitle("Fill 3D");
+        setTitle("Escalacion 3D");
         setSize(450, 450);
         setLayout(null);
         setVisible(true);

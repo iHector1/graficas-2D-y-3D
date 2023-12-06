@@ -102,11 +102,14 @@ public class Transformations {
                     new Location(result[0][i] + center.pointX, result[1][i] + center.pointY));
         return resultList;
     }
-    public ArrayList<Location3D> translation3D(int dx, int dy,int dz, ArrayList<Location3D> points) {
+
+
+    //3d
+    public ArrayList<Location3D> translation3D(float dx, float dy,float dz, ArrayList<Location3D> points) {
         ArrayList<Location3D> resultList = new ArrayList<Location3D>();
         int size = points.size();
         int[][] inputMatrix = new int[4][size];
-        int[][] matrix = {{1, 0,0,dx}, {0, 1,0, dy}, {0, 0, 1,dz},{0,0,0,1}};
+        double[][] matrix = {{1, 0,0,dx}, {0, 1,0, dy}, {0, 0, 1,dz},{0,0,0,1}};
 
         for (int i = 0; i < size; i++){
             inputMatrix[0][i] = points.get(i).pointX;

@@ -7,7 +7,7 @@ import static java.lang.Thread.sleep;
 
 public class Traslation3D extends JFrame implements Runnable {
     private Color color, disponible;
-    private int incX,incY,incZ;
+    private float incX,incY,incZ;
     private BufferedImage bufferImage;
     private Image buffer;
     private Graphics graphics;
@@ -219,11 +219,11 @@ public class Traslation3D extends JFrame implements Runnable {
     public void run() {
         while (incX<50) {
             try {
-                incX+=1;
-                incY-=1;
+                incX+=0.1;
+                incY-=0.1;
                 incZ=1;
                 repaint();
-                sleep(1000);
+                sleep(80);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }catch (Exception e){
