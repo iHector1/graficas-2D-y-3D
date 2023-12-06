@@ -3,6 +3,9 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import javax.swing.JButton;
@@ -112,219 +115,7 @@ public class Perspectiva extends JFrame implements Runnable{
         }
     }
 
-    public void Diapositiva8(){
 
-        int a=40;
-        int b=120;
-        int c=120;
-
-        int [][] coordenadas={  {a,a,a}, //A0
-                {a,a,b}, //B1
-                {a,b,a}, //C2
-                {a,b,b}, //D3
-                {b,a,a}, //E4
-                {b,a,b}, //F5
-                {b,b,a}, //G6
-                {b,b,b}, //H7
-        };
-
-        int [] d={b,a,b};
-
-        int [][] fig2d = new int [16][2];
-        int t;
-        int Xa=400,Ya=400;
-
-        for(int i=0;i<8;i++){
-            t=-coordenadas[i][2]/d[2];
-            fig2d[i][0]=coordenadas[i][0]+(t*d[0]);
-            fig2d[i][1]=coordenadas[i][1]+(t*d[1]);
-        }
-
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[1][0],Ya-fig2d[1][1], Color.WHITE); //A->B
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[3][0],Ya-fig2d[3][1], Color.WHITE); //B->C
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[3][0],Ya-fig2d[3][1], Color.WHITE); //C->D
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[0][0],Ya-fig2d[0][1], Color.WHITE); //D->A
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //C->G
-        lineaDDA(Xa-fig2d[3][0],Ya-fig2d[3][1],Xa-fig2d[7][0],Ya-fig2d[7][1], Color.WHITE); //D->H
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //A->E
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //B->F
-        lineaDDA(Xa-fig2d[7][0],Ya-fig2d[7][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //H->G
-        lineaDDA(Xa-fig2d[7][0],Ya-fig2d[7][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //H->F
-        lineaDDA(Xa-fig2d[5][0],Ya-fig2d[5][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //F->E
-        lineaDDA(Xa-fig2d[4][0],Ya-fig2d[4][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //E->G
-
-        int Xb=200,Yb=400;
-
-        d[1]=c;
-        d[2]=200;
-
-        for(int i=0;i<8;i++){
-            t=-coordenadas[i][2]/d[2];
-            fig2d[i][0]=coordenadas[i][0]+(t*d[0]);
-            fig2d[i][1]=coordenadas[i][1]+(t*d[1]);
-        }
-
-        lineaDDA(Xb-fig2d[0][0],Yb-fig2d[0][1],Xb-fig2d[1][0],Yb-fig2d[1][1], Color.WHITE); //A->B
-        lineaDDA(Xb-fig2d[1][0],Yb-fig2d[1][1],Xb-fig2d[3][0],Yb-fig2d[3][1], Color.WHITE); //B->C
-        lineaDDA(Xb-fig2d[2][0],Yb-fig2d[2][1],Xb-fig2d[3][0],Yb-fig2d[3][1], Color.WHITE); //C->D
-        lineaDDA(Xb-fig2d[2][0],Yb-fig2d[2][1],Xb-fig2d[0][0],Yb-fig2d[0][1], Color.WHITE); //D->A
-        lineaDDA(Xb-fig2d[2][0],Yb-fig2d[2][1],Xb-fig2d[6][0],Yb-fig2d[6][1], Color.WHITE); //C->G
-        lineaDDA(Xb-fig2d[3][0],Yb-fig2d[3][1],Xb-fig2d[7][0],Yb-fig2d[7][1], Color.WHITE); //D->H
-        lineaDDA(Xb-fig2d[0][0],Yb-fig2d[0][1],Xb-fig2d[4][0],Yb-fig2d[4][1], Color.WHITE); //A->E
-        lineaDDA(Xb-fig2d[1][0],Yb-fig2d[1][1],Xb-fig2d[5][0],Yb-fig2d[5][1], Color.WHITE); //B->F
-        lineaDDA(Xb-fig2d[7][0],Yb-fig2d[7][1],Xb-fig2d[6][0],Yb-fig2d[6][1], Color.WHITE); //H->G
-        lineaDDA(Xb-fig2d[7][0],Yb-fig2d[7][1],Xb-fig2d[5][0],Yb-fig2d[5][1], Color.WHITE); //H->F
-        lineaDDA(Xb-fig2d[5][0],Yb-fig2d[5][1],Xb-fig2d[4][0],Yb-fig2d[4][1], Color.WHITE); //F->E
-        lineaDDA(Xb-fig2d[4][0],Yb-fig2d[4][1],Xb-fig2d[6][0],Yb-fig2d[6][1], Color.WHITE); //E->G
-    }
-
-    public void Diapositiva9(){
-
-        int a=40;
-        int b=80;
-        int c=120;
-        int e=160;
-
-        int [][] coordenadas={  {e,e,b}, //A0
-                {c,e,c}, //B1
-                {b,e,b}, //C2
-                {c,e,e}, //D3
-                {c,a,c}, //E4
-                {b,a,b}, //F5
-                {c,a,a}, //G6
-                {c,b,c}, //H7
-                {c,c,c}, //I8
-                {b,c,b}, //J9
-                {b,c,e}, //K10
-                {b,b,e}, //L11
-                {a,c,c}, //M12
-                {b,b,b}, //N13
-                {e,a,c}, //O14
-                {a,b,c}, //P15
-        };
-
-        int [] d={b,c,200};
-
-        int [][] fig2d = new int [16][2];
-        int t;
-        int Xa=400,Ya=400;
-
-        for(int i=0;i<16;i++){
-            t=-coordenadas[i][2]/d[2];
-            fig2d[i][0]=coordenadas[i][0]+(t*d[0]);
-            fig2d[i][1]=coordenadas[i][1]+(t*d[1]);
-        }
-
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[1][0],Ya-fig2d[1][1], Color.WHITE); //A->B
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[2][0],Ya-fig2d[2][1], Color.WHITE); //B->C
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[3][0],Ya-fig2d[3][1], Color.WHITE); //C->D
-        lineaDDA(Xa-fig2d[3][0],Ya-fig2d[3][1],Xa-fig2d[0][0],Ya-fig2d[0][1], Color.WHITE); //D->A
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[14][0],Ya-fig2d[14][1], Color.WHITE); //A->O
-        lineaDDA(Xa-fig2d[3][0],Ya-fig2d[3][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //D->G
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[9][0],Ya-fig2d[9][1], Color.WHITE); //C->J
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[8][0],Ya-fig2d[8][1], Color.WHITE); //B->I
-        lineaDDA(Xa-fig2d[9][0],Ya-fig2d[9][1],Xa-fig2d[12][0],Ya-fig2d[12][1], Color.WHITE); //J->M
-        lineaDDA(Xa-fig2d[12][0],Ya-fig2d[12][1],Xa-fig2d[10][0],Ya-fig2d[10][1], Color.WHITE); //M->K
-        lineaDDA(Xa-fig2d[12][0],Ya-fig2d[12][1],Xa-fig2d[15][0],Ya-fig2d[15][1], Color.WHITE); //M->P
-        lineaDDA(Xa-fig2d[11][0],Ya-fig2d[11][1],Xa-fig2d[15][0],Ya-fig2d[15][1], Color.WHITE); //L->P
-        lineaDDA(Xa-fig2d[13][0],Ya-fig2d[13][1],Xa-fig2d[15][0],Ya-fig2d[15][1], Color.WHITE); //N->P
-        lineaDDA(Xa-fig2d[7][0],Ya-fig2d[7][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //H->E
-        lineaDDA(Xa-fig2d[13][0],Ya-fig2d[13][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //N->F
-        lineaDDA(Xa-fig2d[5][0],Ya-fig2d[5][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //F->E
-        lineaDDA(Xa-fig2d[4][0],Ya-fig2d[4][1],Xa-fig2d[14][0],Ya-fig2d[14][1], Color.WHITE); //E->O
-        lineaDDA(Xa-fig2d[14][0],Ya-fig2d[14][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //O->G
-        lineaDDA(Xa-fig2d[6][0],Ya-fig2d[6][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //G->F
-    }
-
-    public void Diapositiva12(){
-
-        int a=40;
-        int b=140;
-
-        int [][] coordenadas={      {a,a,a}, //A0
-                {a,a,b}, //B1
-                {a,b,a}, //C2
-                {a,b,b}, //D3
-                {b,a,a}, //E4
-                {b,a,b}, //F5
-                {b,b,a}, //G6
-                {b,b,b}, //H7
-        };
-
-        int [] d={-20,200,240};
-
-        int [][] fig2d = new int [16][2];
-
-        int Xa=400,Ya=300;
-
-        for(int i=0;i<8;i++){
-            fig2d[i][0]=coordenadas[i][0]+(coordenadas[i][2]/(d[2]-coordenadas[i][2]))*(coordenadas[i][0]-d[0]);
-            fig2d[i][1]=coordenadas[i][1]+(coordenadas[i][2]/(d[2]-coordenadas[i][2]))*(coordenadas[i][1]-d[1]);
-        }
-
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[1][0],Ya-fig2d[1][1], Color.WHITE); //A->B
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[3][0],Ya-fig2d[3][1], Color.WHITE); //B->C
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[3][0],Ya-fig2d[3][1], Color.WHITE); //C->D
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[0][0],Ya-fig2d[0][1], Color.WHITE); //D->A
-        lineaDDA(Xa-fig2d[2][0],Ya-fig2d[2][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //C->G
-        lineaDDA(Xa-fig2d[3][0],Ya-fig2d[3][1],Xa-fig2d[7][0],Ya-fig2d[7][1], Color.WHITE); //D->H
-        lineaDDA(Xa-fig2d[0][0],Ya-fig2d[0][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //A->E
-        lineaDDA(Xa-fig2d[1][0],Ya-fig2d[1][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //B->F
-        lineaDDA(Xa-fig2d[7][0],Ya-fig2d[7][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //H->G
-        lineaDDA(Xa-fig2d[7][0],Ya-fig2d[7][1],Xa-fig2d[5][0],Ya-fig2d[5][1], Color.WHITE); //H->F
-        lineaDDA(Xa-fig2d[5][0],Ya-fig2d[5][1],Xa-fig2d[4][0],Ya-fig2d[4][1], Color.WHITE); //F->E
-        lineaDDA(Xa-fig2d[4][0],Ya-fig2d[4][1],Xa-fig2d[6][0],Ya-fig2d[6][1], Color.WHITE); //E->G
-
-    }
-
-    public void Diapositiva15(){
-
-        perspectivaCubo(this.coordenadas,100.0,400.0,1,this.d);
-        perspectivaCubo(this.coordenadas,300.0,400.0,2,this.d);
-        perspectivaCubo(this.coordenadas,500.0,400.0,3,this.d);
-
-    }
-
-    public void perspectivaCubo(Double [][] coordenadas, Double Xa, Double Ya, int numFocos, Double [][] focos){
-
-        Double [][] fig2d = new Double [8][2];
-
-        switch(numFocos){
-            case 1:
-                for(int i=0;i<8;i++){
-                    fig2d[i][0]=coordenadas[i][0]/((-1/d[0][0])*coordenadas[i][2]+1);
-                    fig2d[i][1]=coordenadas[i][1]/((-1/d[0][1])*coordenadas[i][2]+1);
-                }
-                break;
-            case 2:
-                for(int i=0;i<8;i++){
-                    fig2d[i][0]=coordenadas[i][0]/((-1/d[0][0])*coordenadas[i][0]+(-1/d[2][0])*coordenadas[i][2]+1);
-                    fig2d[i][1]=coordenadas[i][1]/((-1/d[0][1])*coordenadas[i][0]+(-1/d[2][1])*coordenadas[i][2]+1);
-                }
-                break;
-            case 3:
-                for(int i=0;i<8;i++){
-
-                    fig2d[i][0]=coordenadas[i][0]/((-1.0/d[0][0])*coordenadas[i][0]+(-1/d[1][0])*coordenadas[i][1]+(-1/d[2][0])*coordenadas[i][2]+1.0);
-                    fig2d[i][1]=coordenadas[i][1]/((-1.0/d[0][1])*coordenadas[i][0]+(-1/d[1][1])*coordenadas[i][1]+(-1/d[2][1])*coordenadas[i][2]+1.0);
-                }
-                break;
-        }
-
-        lineaDDA((int)(Xa-fig2d[0][0]),(int)(Ya-fig2d[0][1]),(int)(Xa-fig2d[1][0]),(int)(Ya-fig2d[1][1]), Color.WHITE); //A->B
-        lineaDDA((int)(Xa-fig2d[1][0]),(int)(Ya-fig2d[1][1]),(int)(Xa-fig2d[3][0]),(int)(Ya-fig2d[3][1]), Color.WHITE); //B->C
-        lineaDDA((int)(Xa-fig2d[2][0]),(int)(Ya-fig2d[2][1]),(int)(Xa-fig2d[3][0]),(int)(Ya-fig2d[3][1]), Color.WHITE); //C->D
-        lineaDDA((int)(Xa-fig2d[2][0]),(int)(Ya-fig2d[2][1]),(int)(Xa-fig2d[0][0]),(int)(Ya-fig2d[0][1]), Color.WHITE); //D->A
-        lineaDDA((int)(Xa-fig2d[2][0]),(int)(Ya-fig2d[2][1]),(int)(Xa-fig2d[6][0]),(int)(Ya-fig2d[6][1]), Color.WHITE); //C->G
-        lineaDDA((int)(Xa-fig2d[3][0]),(int)(Ya-fig2d[3][1]),(int)(Xa-fig2d[7][0]),(int)(Ya-fig2d[7][1]), Color.WHITE); //D->H
-        lineaDDA((int)(Xa-fig2d[0][0]),(int)(Ya-fig2d[0][1]),(int)(Xa-fig2d[4][0]),(int)(Ya-fig2d[4][1]), Color.WHITE); //A->E
-        lineaDDA((int)(Xa-fig2d[1][0]),(int)(Ya-fig2d[1][1]),(int)(Xa-fig2d[5][0]),(int)(Ya-fig2d[5][1]), Color.WHITE); //B->F
-        lineaDDA((int)(Xa-fig2d[7][0]),(int)(Ya-fig2d[7][1]),(int)(Xa-fig2d[6][0]),(int)(Ya-fig2d[6][1]), Color.WHITE); //H->G
-        lineaDDA((int)(Xa-fig2d[7][0]),(int)(Ya-fig2d[7][1]),(int)(Xa-fig2d[5][0]),(int)(Ya-fig2d[5][1]), Color.WHITE); //H->F
-        lineaDDA((int)(Xa-fig2d[5][0]),(int)(Ya-fig2d[5][1]),(int)(Xa-fig2d[4][0]),(int)(Ya-fig2d[4][1]), Color.WHITE); //F->E
-        lineaDDA((int)(Xa-fig2d[4][0]),(int)(Ya-fig2d[4][1]),(int)(Xa-fig2d[6][0]),(int)(Ya-fig2d[6][1]), Color.WHITE); //E->G
-
-    }
 
     public void paralelaCubo(Double [][] coordenadas, Double Xa, Double Ya){
 
@@ -541,25 +332,6 @@ public class Perspectiva extends JFrame implements Runnable{
 
     }
 
-    public void animTrasladar(Graphics g){
-        Traslacion(this.coordenadas,5,5,5);
-        Traslacion(this.centros,5,5,5);
-        paraleloCentros(300.0,400.0);
-        paralelaCubo(this.coordenadas,300.0,400.0);
-        inundarCubo();
-        this.getGraphics().drawImage(this.animacion, 0, 0, this);
-
-    }
-
-    public void animEscalar(Graphics g){
-        Escalacion(this.coordenadas,1.1,1.1,1.1);
-        Escalacion(this.centros,1.1,1.1,1);
-        paraleloCentros(300.0,400.0);
-        paralelaCubo(this.coordenadas,300.0,400.0);
-        inundarCubo();
-        this.getGraphics().drawImage(this.animacion, 0, 0, this);
-
-    }
 
     public void animRotar(Graphics g){
 
@@ -578,7 +350,7 @@ public class Perspectiva extends JFrame implements Runnable{
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
                 hilo.sleep(10);
             } catch (InterruptedException ex) {
-                //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -597,11 +369,11 @@ public class Perspectiva extends JFrame implements Runnable{
                 paraleloCentros(300.0,400.0);
                 paralelaCubo(this.coordenadas,300.0,400.0);
 
-                inundarCubo();
+                //inundarCubo();
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
                 hilo.sleep(10);
             } catch (InterruptedException ex) {
-                //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -619,11 +391,11 @@ public class Perspectiva extends JFrame implements Runnable{
                 paraleloCentros(300.0,400.0);
                 paralelaCubo(this.coordenadas,300.0,400.0);
 
-                //RellenarCubo();
+                inundarCubo();
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
                 hilo.sleep(10);
             } catch (InterruptedException ex) {
-                //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -647,6 +419,7 @@ public class Perspectiva extends JFrame implements Runnable{
     }
 
     public void inundarCubo(){
+        System.out.println(indexZ);
         if(indexZ!=0&&indexZ!=1&&indexZ!=2&&indexZ!=3)inundacion((int)(Xa-centrosP[0][0]),(int)(Ya-centrosP[0][1]),Color.WHITE);
         if(indexZ!=1&&indexZ!=3&&indexZ!=5&&indexZ!=7)inundacion((int)(Xa-centrosP[1][0]),(int)(Ya-centrosP[1][1]),Color.BLUE);
         if(indexZ!=4&&indexZ!=5&&indexZ!=6&&indexZ!=7)inundacion((int)(Xa-centrosP[2][0]),(int)(Ya-centrosP[2][1]),Color.RED);
