@@ -39,7 +39,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             {b,b,b,1.0}, //H7
     };
     private int contador;
-
+    int espacios [][]={{0,0,0,0},{0,0,0},{0,0},{0}};
     Double ae=-10.0,be=5.0;
     Double [][] coordenadasEsc={    {ae,ae,ae,1.0}, //A0
             {ae,ae,be,1.0}, //B1
@@ -74,6 +74,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             {b1,b1,a1,1.0}, //G6
             {b1,b1,b1,1.0}, //H7
     };
+    boolean colorido;
 
     /*         End Estructura cubos     */
     Double [][] d={ {200.0,300.0,450.0},
@@ -98,8 +99,11 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     private ArrayList<Location3D> pointsXYZ = new ArrayList<Location3D>();
     private int time;
     private float cubertoIncX=0,cubertoIncY=0,cubertoIncZ=0;
+    private boolean finScena;
 
     public Animation3D(){
+        finScena=false;
+        colorido = false;
         this.cubertoIncX=1;
         this.cubertoIncY=1;
         this.cubertoIncZ=1;
@@ -284,6 +288,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     }
 
     public void gameboy(){
+        BufferedImage temp2 = new BufferedImage(800, 800, BufferedImage.TYPE_INT_RGB);
+        temp2.setData(animacion.getRaster());
         int square [][]={
                 {0,0},
                 {100,0},
@@ -709,27 +715,23 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             gameboy();
             //control();
 
-            try{
-                if(false){
-                    cubes();
+            if(incX<1.074){
+                System.out.println(incX);
+                cubes();
 
-                    this.time+= 1000/60;
-                }else{
-                    Rotacion(this.coordenadas,1,'y');
-                    Rotacion(this.centros,1,'y');
-                    paraleloCentros();
-                    paralelaCubo(this.coordenadas,200.0,275.0);
-                    RellenarCubo(200.0,275.0);
-                    cubosQbert();//Estructura del nivel
-                    cuberto();
-                    time = 1;
-                }
-
-                this.getGraphics().drawImage(this.animacion, 0, 0, this);
-                hilo.sleep(this.time);
-            } catch (InterruptedException ex) {
-                //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
+                this.time+= 1000/60;
+            }else{
+                Rotacion(this.coordenadas,1,'y');
+                Rotacion(this.centros,1,'y');
+                paraleloCentros();
+                paralelaCubo(this.coordenadas,200.0,275.0);
+                RellenarCubo(200.0,275.0);
+                cubosQbert();//Estructura del nivel
+                cuberto();
+                time = 1;
             }
+
+            this.getGraphics().drawImage(this.animacion, 0, 0, this);
         }
     }
     private void rutina(){
@@ -744,18 +746,104 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             }else{
                 this.r1=false;
                 this.r2 = true;
+                espacios[0][0]=1;
                 cubertoIncZ=0;
                 cubertoIncX=0;
                 cubertoIncY = 0;
                 try {
-                    sleep(1000);
+                    sleep(120);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        location3D=transformations.translation3D(1,-2,cubertoIncZ,location3D);
-        
+        else if(r2 && contador<150){
+            //location3D=transformations.translation3D(1,-2,cubertoIncZ,location3D);
+            location3D=transformations.translation3D(1,2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador == 50){
+                espacios[0][1]=1;
+            }
+            if(contador == 110){
+                espacios[0][2]=1;
+            }
+            if(contador==150){
+                espacios[0][3]=1;
+                r3=true;
+                r2=false;
+                contador=0;
+            }
+        }
+        else if(r3 && contador<150){
+            location3D=transformations.translation3D(-1,-2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador==150){
+                r4=true;
+                r3=false;
+                contador = 0;
+            }
+        }else if(r4 && contador<126){
+            location3D=transformations.translation3D(-1,2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador == 31){
+                espacios[1][0]=1;
+            }
+            if(contador == 62){
+                espacios[2][0]=1;
+            }
+            if(contador==126){
+                r5=true;
+                r4=false;
+                contador=0;
+                espacios[3][0]=1;
+            }
+        }else if(r5 && contador<85){
+            location3D=transformations.translation3D(1,-2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador==85){
+                r6=true;
+                r5=false;
+                contador=0;
+            }
+        }
+        else if(r6 && contador<100){
+            location3D=transformations.translation3D(1,2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador == 50){
+                espacios[1][1]=1;
+            }
+            if(contador==100){
+                r7=true;
+                r6=false;
+                contador=0;
+                espacios[1][2] =1;
+            }
+        }else if(r7 && contador<50){
+            location3D=transformations.translation3D(-1,-2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador==50){
+                r8=true;
+                r7=false;
+                contador=0;
+            }
+        }
+        else if(r8 && contador<40){
+            location3D=transformations.translation3D(-1,2,cubertoIncZ,location3D);
+            contador++;
+            System.out.println(contador);
+            if(contador==40){
+                r8=false;
+                finScena = true;
+                espacios[2][1]=1;
+                contador=0;
+            }
+        }
     }
 
     public void cubosQbert(){
@@ -763,24 +851,64 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         double initialY = 300.0; // Coordenada Y inicial para la primera figura
         double deltaY = 99; // Espaciado vertical entre filas
         int cuadros = 4;
+        if(!finScena){
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < cuadros; i++) { // Generar tres filas
+                    paraleloCentros(); // Incremento de X para cada fila
+                    paralelaCubo(coorCubos, initialX + (i * 50.0), initialY + (i * deltaY)); // Dibujo de la figura en la fila
 
-        for (int j = 0; j < 4; j++) {
-            for (int i = 0; i < cuadros; i++) { // Generar tres filas
-                paraleloCentros(); // Incremento de X para cada fila
-                paralelaCubo(coorCubos, initialX + (i * 50.0), initialY + (i * deltaY)); // Dibujo de la figura en la fila
+                    // Calculando los valores para inundacion()
+                    int x = (int) (initialX + (i * 50.0)) + 1;
+                    int y1 = (int) (initialY + (i * deltaY)) - 5;
+                    int y2 = (int) (initialY + (i * deltaY)) + 5;
+                    if(espacios[j][i]!=0){
+                        inundacion(x, y1, Color.YELLOW);
+                        inundacion(x, y2, Color.GRAY);
+                        inundacion(x - 5, y2, Color.CYAN);
+                    }else{
+                        inundacion(x, y1, Color.BLUE);
+                        inundacion(x, y2, Color.PINK);
+                        inundacion(x - 5, y2, Color.white);
+                    }
 
-                // Calculando los valores para inundacion()
-                int x = (int) (initialX + (i * 50.0)) + 1;
-                int y1 = (int) (initialY + (i * deltaY)) - 5;
-                int y2 = (int) (initialY + (i * deltaY)) + 5;
-                inundacion(x, y1, Color.BLUE);
-                inundacion(x, y2, Color.PINK);
-                inundacion(x - 5, y2, Color.LIGHT_GRAY);
+                }
+                initialX-=45;
+                initialY+=78;
+                cuadros --;
             }
-            initialX-=45;
-            initialY+=78;
-            cuadros --;
+        }else{
+            if(colorido){
+                colorido = false;
+            }else{
+                colorido = true;
+            }
+
+            for (int j = 0; j < 4; j++) {
+                for (int i = 0; i < cuadros; i++) { // Generar tres filas
+                    paraleloCentros(); // Incremento de X para cada fila
+                    paralelaCubo(coorCubos, initialX + (i * 50.0), initialY + (i * deltaY)); // Dibujo de la figura en la fila
+
+                    // Calculando los valores para inundacion()
+                    int x = (int) (initialX + (i * 50.0)) + 1;
+                    int y1 = (int) (initialY + (i * deltaY)) - 5;
+                    int y2 = (int) (initialY + (i * deltaY)) + 5;
+                    if(colorido){
+                        inundacion(x, y1, Color.YELLOW);
+                        inundacion(x, y2, Color.GRAY);
+                        inundacion(x - 5, y2, Color.CYAN);
+                    }else{
+                        inundacion(x, y1, Color.BLUE);
+                        inundacion(x, y2, Color.PINK);
+                        inundacion(x - 5, y2, Color.white);
+                    }
+
+                }
+                initialX-=45;
+                initialY+=78;
+                cuadros --;
+            }
         }
+
 
     }
     private void loading(){
@@ -930,16 +1058,20 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
             locations.add(new Location((int) x+370, (int) y+150));
         }
+        Location location = new Location(2,3);
         for (Location point: locations){
             putPixel(point.pointX, point.pointY,Color.red);
+            location.setPointY(point.pointY);
+            location.setPointX(point.pointX);
         }
+        putPixel(location.pointX, location.pointY,Color.white);
         int square[][] = {
                 {locations.get(0).pointX, locations.get(0).pointY},
                 {locations.get(1).pointX, locations.get(1).pointY},
                 {locations.get(5).pointX, locations.get(5).pointY},
                 {locations.get(4).pointX, locations.get(4).pointY}
         };
-        fillFigure(square, Color.BLUE);
+        fillFigure(square, Color.magenta);
         int square2[][] = {
                 {locations.get(0).pointX, locations.get(0).pointY},
                 {locations.get(4).pointX, locations.get(4).pointY},
@@ -947,7 +1079,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
                 {locations.get(2).pointX, locations.get(2).pointY}
 
         };
-        fillFigure(square2, Color.WHITE);
+        fillFigure(square2, Color.PINK);
         int square3[][] = {
                 {locations.get(4).pointX, locations.get(4).pointY},
                 {locations.get(5).pointX, locations.get(5).pointY},
@@ -957,6 +1089,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         };
         fillFigure(square3, Color.red);
         pointsXY.clear();
+        inundacion2(location.pointX,location.pointY,Color.YELLOW,Color.blue);
     }
     private void button(){
         ArrayList<Location3D> location3DS = new ArrayList<>();
