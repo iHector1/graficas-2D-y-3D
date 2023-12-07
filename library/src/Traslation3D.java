@@ -56,7 +56,7 @@ public class Traslation3D extends JFrame implements Runnable {
     }
 
     private void drawCube() {
-        pointsXYZ = transformations.translation3D(incX,incY,incZ,pointsXYZ);
+        pointsXYZ = transformations.translation3D(incX,0,0,pointsXYZ);
         for (int i = 0; i < pointsXYZ.size(); i++) {
             float u = (float) (pointsXYZ.get(i).pointZ) / vector.pointZ;
             float x = pointsXYZ.get(i).pointX + (vector.pointX * u);

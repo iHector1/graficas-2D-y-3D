@@ -1,3 +1,5 @@
+
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -18,6 +20,7 @@ import javax.swing.JFrame;
 
 public class Animation3D extends JFrame implements Runnable, KeyListener {
 
+    private ArrayList<Location3D> location3D;
     private BufferedImage buffer, animacion,temp,temp2;
     private Thread hilo;
     private Color color, disponible;
@@ -25,6 +28,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     int x , y,z;
     private float incX, incY, incZ;
     Double a=-25.0,b=15.0;
+    boolean r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12;
     Double [][] coordenadas={   {a,a,a,1.0}, //A0
             {a,a,b,1.0}, //B1
             {a,b,a,1.0}, //C2
@@ -34,6 +38,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             {b,b,a,1.0}, //G6
             {b,b,b,1.0}, //H7
     };
+    private int contador;
 
     Double ae=-10.0,be=5.0;
     Double [][] coordenadasEsc={    {ae,ae,ae,1.0}, //A0
@@ -92,9 +97,12 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
     private Transformations transformations;
     private ArrayList<Location3D> pointsXYZ = new ArrayList<Location3D>();
     private int time;
+    private float cubertoIncX=0,cubertoIncY=0,cubertoIncZ=0;
 
     public Animation3D(){
-
+        this.cubertoIncX=1;
+        this.cubertoIncY=1;
+        this.cubertoIncZ=1;
         setTitle("Qbert");
         setSize(800,800);
         setLayout(null);
@@ -103,11 +111,14 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         animacion=new BufferedImage(600,500,BufferedImage.TYPE_INT_RGB);
         disponible=new Color(0,0,0);
 
+
+        location3D = new ArrayList<>();
         centros=new Double[6][4];
         determinarCentros();
         auxCoordenadas=coordenadas.clone();
         auxCentros=centros.clone();
-
+        r1=true;
+        r2=r3=r4=r6=r7=r8=r9=r10=r11=r12=false;
         centrosEsc=new Double[6][4];
         determinarCentrosEsc();
         auxCoordenadasEsc=coordenadasEsc.clone();
@@ -117,7 +128,18 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         determinarCentrosT();
         auxCoordenadasT=coordenadasT.clone();
         auxCentrosT=centrosT.clone();
+        transformations = new Transformations();
         Rotacion(coorCubos, 22, 'y');
+        //primera cara
+        location3D.add(new Location3D(10, 10, 2));//a 0
+        location3D.add(new Location3D(40, 10, 2));//b 1
+        location3D.add(new Location3D(10, 40, 2));//c 2
+        location3D.add(new Location3D(40, 40, 2));//d 3
+        //second square
+        location3D.add(new Location3D(10, 10, 10));//e 4
+        location3D.add(new Location3D(40, 10, 10));//f 5
+        location3D.add(new Location3D(10, 40, 10));//g 6
+        location3D.add(new Location3D(40, 40, 10));//h 7
         hilo=new Thread(this);
         hilo.start();
 
@@ -140,6 +162,110 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyListener(this);
+        contador=0;
+    }
+
+    public void control(){
+        ArrayList<Location3D> location3DS = new ArrayList<>();
+        ArrayList<Location> locations = new ArrayList<>();
+        //primera cara
+        location3DS.add(new Location3D(30,70 ,2 ));//a
+        location3DS.add(new Location3D(50,70 ,2 ));//b
+        location3DS.add(new Location3D(50,50 ,2 ));//c
+        location3DS.add(new Location3D(70,50 ,2 ));//d
+        location3DS.add(new Location3D(70,30 ,2 ));//e
+        location3DS.add(new Location3D(50,30 ,2 ));//f
+        location3DS.add(new Location3D(50,10 ,2 ));//g
+        location3DS.add(new Location3D(30,10 ,2 ));//h
+        location3DS.add(new Location3D(30,30 ,2 ));//i
+        location3DS.add(new Location3D(10,30 ,2 ));//j
+        location3DS.add(new Location3D(10,50 ,2 ));//k
+        location3DS.add(new Location3D(30,50 ,2 ));//L
+
+        //segunda cara
+        location3DS.add(new Location3D(30,70 ,30 ));//a1
+        location3DS.add(new Location3D(50,70 ,30 ));//b1
+        location3DS.add(new Location3D(50,50 ,30 ));//c1
+        location3DS.add(new Location3D(70,50 ,30 ));//d1
+        location3DS.add(new Location3D(70,30 ,30 ));//e1
+        location3DS.add(new Location3D(50,30 ,30 ));//f1
+        location3DS.add(new Location3D(50,10 ,30 ));//g1
+        location3DS.add(new Location3D(30,10 ,30 ));//h1
+        location3DS.add(new Location3D(30,30 ,30 ));//i1
+        location3DS.add(new Location3D(10,30 ,30 ));//j1
+        location3DS.add(new Location3D(10,50 ,30 ));//k1
+        location3DS.add(new Location3D(30,50 ,30 ));//l1
+        for (int i = 0; i < location3DS.size(); i++){
+            float u = 0;
+            float y = location3DS.get(i).pointY + (vector.pointY * u);
+            float z = location3DS.get(i).pointX + (vector.pointX * u);
+
+            locations.add(new Location((int) ((int)10.0+y), (int) ((int)400.0+z)));
+        }
+        for (Location point: locations){
+            putPixel(point.pointX, point.pointY,Color.red);
+        }
+        ArrayList<Location> pointsAB = g.bresenham(locations.get(0),locations.get(1));
+        ArrayList<Location> pointsBC = g.bresenham(locations.get(1),locations.get(2));
+        ArrayList<Location> pointsCD = g.bresenham(locations.get(2),locations.get(3));
+        ArrayList<Location> pointsDE = g.bresenham(locations.get(3), locations.get(4));
+        ArrayList<Location> pointsEF = g.bresenham(locations.get(4), locations.get(5));
+        ArrayList<Location> pointsFG = g.bresenham(locations.get(5), locations.get(6));
+        ArrayList<Location> pointsGH = g.bresenham(locations.get(6), locations.get(7));
+        ArrayList<Location> pointsHI = g.bresenham(locations.get(7), locations.get(8));
+        ArrayList<Location> pointsIJ = g.bresenham(locations.get(8), locations.get(9));
+        ArrayList<Location> pointsJK = g.bresenham(locations.get(9), locations.get(10));
+        ArrayList<Location> pointsKL = g.bresenham(locations.get(10), locations.get(11));
+        ArrayList<Location> pointsLA = g.bresenham(locations.get(11), locations.get(0));
+
+        ArrayList<Location> pointsAB1 = g.bresenham(locations.get(12), locations.get(13));
+        ArrayList<Location> pointsBC1 = g.bresenham(locations.get(13), locations.get(14));
+        ArrayList<Location> pointsCD1 = g.bresenham(locations.get(14), locations.get(15));
+        ArrayList<Location> pointsDE1 = g.bresenham(locations.get(15), locations.get(16));
+        ArrayList<Location> pointsEF1 = g.bresenham(locations.get(16), locations.get(17));
+        ArrayList<Location> pointsFG1 = g.bresenham(locations.get(17), locations.get(18));
+        ArrayList<Location> pointsGH1 = g.bresenham(locations.get(18), locations.get(19));
+        ArrayList<Location> pointsHI1 = g.bresenham(locations.get(19), locations.get(20));
+        ArrayList<Location> pointsIJ1 = g.bresenham(locations.get(20), locations.get(21));
+        ArrayList<Location> pointsJK1 = g.bresenham(locations.get(21), locations.get(22));
+        ArrayList<Location> pointsKL1 = g.bresenham(locations.get(22), locations.get(23));
+        ArrayList<Location> pointsLA1 = g.bresenham(locations.get(23), locations.get(12));
+
+        ArrayList<Location> points = pointsAB;
+        points.addAll(pointsBC);
+        points.addAll(pointsCD);
+        points.addAll(pointsDE);
+        points.addAll(pointsEF);
+        points.addAll(pointsFG);
+        points.addAll(pointsGH);
+        points.addAll(pointsHI);
+        points.addAll(pointsIJ);
+        points.addAll(pointsJK);
+        points.addAll(pointsKL);
+        points.addAll(pointsLA);
+
+        //second cara
+        points.addAll(pointsAB1);
+        points.addAll(pointsBC1);
+        points.addAll(pointsCD1);
+        points.addAll(pointsDE1);
+        points.addAll(pointsEF1);
+        points.addAll(pointsFG1);
+        points.addAll(pointsGH1);
+        points.addAll(pointsHI1);
+        points.addAll(pointsIJ1);
+        points.addAll(pointsJK1);
+        points.addAll(pointsKL1);
+        points.addAll(pointsLA1);
+        Location location = new Location(2,3);
+        for (Location point: points){
+            putPixel(point.pointX, point.pointY,Color.red);
+            location.setPointX(point.pointX);
+            location.setPointY(point.pointY);
+        }
+
+        inundacion2(location.pointX-15,location.pointY+11,Color.red,Color.white);
+
     }
 
     public void paint(Graphics g){
@@ -192,6 +318,9 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
 
         };
         fillFigure(square4,Color.white);
+        control();
+        button();
+        button2();
     }
 
 
@@ -524,6 +653,18 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         centrosT[5][3]=1.0;
     }
 
+    public void inundacion2(int x, int y, Color c,Color ob){
+        if((x<this.getWidth()&&y<800)&&(x>0&&y>0)){
+            color=ReadPixel(x,y);
+            if(color.equals(ob)){
+                putPixel(x,y,c);
+                inundacion2(x,y+1,c,ob);
+                inundacion2(x+1,y,c,ob);
+                inundacion2(x,y-1,c,ob);
+                inundacion2(x-1,y,c,ob);
+            }
+        }
+    }
     public void inundacion(int x, int y, Color c){
         if((x<this.getWidth()&&y<800)&&(x>0&&y>0)){
             color=ReadPixel(x,y);
@@ -566,19 +707,22 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             animacion = new BufferedImage(800, 800, BufferedImage.TYPE_INT_RGB);
             animacion.setData(temp.getRaster());
             gameboy();
+            //control();
 
             try{
-                if(incX<1.1190056){
+                if(false){
                     cubes();
+
+                    this.time+= 1000/60;
+                }else{
                     Rotacion(this.coordenadas,1,'y');
                     Rotacion(this.centros,1,'y');
                     paraleloCentros();
-                    paralelaCubo(this.coordenadas,400.0,275.0);
-                    RellenarCubo(400.0,275.0);
-                    this.time+= 1000/60;
-                }else{
+                    paralelaCubo(this.coordenadas,200.0,275.0);
+                    RellenarCubo(200.0,275.0);
                     cubosQbert();//Estructura del nivel
-                    time = 20;
+                    cuberto();
+                    time = 1;
                 }
 
                 this.getGraphics().drawImage(this.animacion, 0, 0, this);
@@ -587,6 +731,31 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
                 //Logger.getLogger(Perspectiva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    private void rutina(){
+        if(this.r1){
+            cubertoIncZ=0;
+            cubertoIncX=0;
+            if(cubertoIncY<4.0999985){
+                cubertoIncY+=0.1;
+               //System.out.println(cubertoIncY);
+                location3D=transformations.translation3D(cubertoIncX,cubertoIncY,cubertoIncZ,location3D);
+                return;
+            }else{
+                this.r1=false;
+                this.r2 = true;
+                cubertoIncZ=0;
+                cubertoIncX=0;
+                cubertoIncY = 0;
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        location3D=transformations.translation3D(1,-2,cubertoIncZ,location3D);
+        
     }
 
     public void cubosQbert(){
@@ -613,74 +782,6 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
             cuadros --;
         }
 
-/*
-// Generando la fila adicional de 6 figuras a la derecha
-        double newX = initialX + (2 * 50.0); // Coordenada X para la nueva fila
-        double newY = initialY - deltaY * 1.2; // Coordenada Y para la nueva fila
-
-        for (int i = 0; i < extraRow; i++) {
-            paraleloCentros();
-
-            for (int j = 0; j < 3; j++) {
-                paralelaCubo(coorCubos, newX, newY + (i * deltaY));
-                int x = (int) newX + 1 + (j * 5);
-                int y1 = (int) (newY + (i * deltaY)) - 10;
-                int y2 = (int) (newY + (i * deltaY)) + 10;
-                inundacion(x, y1, colors[j]);
-                inundacion(x, y2, colors[j]);
-                inundacion(x - 5, y2, colors[j]);
-            }
-        }
-
-*/
-
-        /*
-
-
-        *//*Fila 1*//*
-        paraleloCentros();
-        paralelaCubo(coorCubos,300.0,200.0);
-        inundacion(301, 195, Color.BLUE);
-        inundacion(301, 201, Color.GRAY);
-        inundacion(295, 201, Color.CYAN);
-
-
-        *//*Fila 2*//*
-        paraleloCentros();
-        paralelaCubo(coorCubos,250.0,275.0);
-        inundacion(251, 246, Color.BLUE);
-        inundacion(251, 276, Color.GRAY);
-        inundacion(246, 276, Color.CYAN);
-
-        paraleloCentros();
-        paralelaCubo(coorCubos,345.0,300.0);
-        inundacion(346, 295, Color.BLUE);
-        inundacion(346, 301, Color.GRAY);
-        inundacion(341, 301, Color.CYAN);
-
-
-        *//*Fila 3*//*
-        paraleloCentros();
-        paralelaCubo(coorCubos,300.0,375.0);
-        inundacion(301, 370, Color.BLUE);
-        inundacion(301, 376, Color.GRAY);
-        inundacion(296, 376, Color.CYAN);
-
-
-        paraleloCentros();
-        paralelaCubo(coorCubos,205.0,352.0);
-        inundacion(206, 347, Color.BLUE);
-        inundacion(206, 353, Color.GRAY);
-        inundacion(201, 353, Color.CYAN);
-
-
-        paraleloCentros();
-        paralelaCubo(coorCubos,394.0,399.0);
-        inundacion(395, 394, Color.BLUE);
-        inundacion(395, 400, Color.GRAY);
-        inundacion(389, 400, Color.CYAN);
-*/
-
     }
     private void loading(){
 
@@ -697,8 +798,8 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
                 incX += .001;
                 incY = 1;
                 incZ = 1;
+
                 repaint();
-                System.out.println(incX);
                 sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -754,6 +855,174 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         };
         fillFigure(square3, Color.GRAY);
         pointsXY.clear();
+    }
+    private void button2(){
+        ArrayList<Location3D> location3DS = new ArrayList<>();
+        ArrayList<Location> locations = new ArrayList<>();
+        //primera cara
+        location3DS.add(new Location3D(10,40 ,2 ));//a
+        location3DS.add(new Location3D(40,40 ,2 ));//b
+        location3DS.add(new Location3D(40,10 ,2 ));//c
+        location3DS.add(new Location3D(10,10 ,2 ));//d
+        //segunda cara
+        location3DS.add(new Location3D(10,40 ,12 ));//e
+        location3DS.add(new Location3D(40,40 ,12 ));//f
+        location3DS.add(new Location3D(40,10 ,12 ));//g
+        location3DS.add(new Location3D(10,10 ,12 ));//h
+
+        for (int i = 0; i < location3DS.size(); i++){
+            float u = 0;
+            float y = location3DS.get(i).pointY + (vector.pointY * u);
+            float z = location3DS.get(i).pointX + (vector.pointX * u);
+
+            locations.add(new Location((int) ((int)700.0+y), (int) ((int)460.0+z)));
+        }
+        for (Location point: locations){
+            putPixel(point.pointX, point.pointY,Color.red);
+        }
+        ArrayList<Location> pointsAB = g.bresenham(locations.get(0),locations.get(1));
+        ArrayList<Location> pointsBC = g.bresenham(locations.get(1),locations.get(2));
+        ArrayList<Location> pointsCD = g.bresenham(locations.get(2),locations.get(3));
+        ArrayList<Location> pointsDA = g.bresenham(locations.get(3), locations.get(0));
+
+        ArrayList<Location> pointsAB1 = g.bresenham(locations.get(4),locations.get(5));
+        ArrayList<Location> pointsBC1 = g.bresenham(locations.get(5),locations.get(6));
+        ArrayList<Location> pointsCD1 = g.bresenham(locations.get(6),locations.get(7));
+        ArrayList<Location> pointsDA1 = g.bresenham(locations.get(7), locations.get(4));
+
+        ArrayList<Location> pointsA = g.bresenham(locations.get(0),locations.get(4));
+        ArrayList<Location> pointsB = g.bresenham(locations.get(1),locations.get(5));
+        ArrayList<Location> pointsC = g.bresenham(locations.get(2),locations.get(6));
+        ArrayList<Location> pointsD = g.bresenham(locations.get(3), locations.get(7));
+
+
+        ArrayList<Location> points = pointsAB;
+        points.addAll(pointsBC);
+        points.addAll(pointsCD);
+        points.addAll(pointsDA);
+        //second cara
+        points.addAll(pointsAB1);
+        points.addAll(pointsBC1);
+        points.addAll(pointsCD1);
+        points.addAll(pointsDA1);
+
+        points.addAll(pointsA);
+        points.addAll(pointsB);
+        points.addAll(pointsC);
+        points.addAll(pointsD);
+
+        Location location = new Location(2,3);
+        for (Location point: points){
+            putPixel(point.pointX, point.pointY,Color.ORANGE);
+            location.setPointX(point.pointX);
+            location.setPointY(point.pointY);
+        }
+        inundacion2(location.pointX+3,location.pointY+3,Color.ORANGE,Color.white);
+
+    }
+    private void cuberto(){
+        rutina();
+        ArrayList<Location> locations = new ArrayList<>();
+        for (int i = 0; i < location3D.size(); i++){
+            float u =  (float) (location3D.get(i).pointZ) / vector.pointZ;
+            float x = location3D.get(i).pointX + (vector.pointX * u);
+            float y = location3D.get(i).pointY + (vector.pointY * u);
+
+            locations.add(new Location((int) x+370, (int) y+150));
+        }
+        for (Location point: locations){
+            putPixel(point.pointX, point.pointY,Color.red);
+        }
+        int square[][] = {
+                {locations.get(0).pointX, locations.get(0).pointY},
+                {locations.get(1).pointX, locations.get(1).pointY},
+                {locations.get(5).pointX, locations.get(5).pointY},
+                {locations.get(4).pointX, locations.get(4).pointY}
+        };
+        fillFigure(square, Color.BLUE);
+        int square2[][] = {
+                {locations.get(0).pointX, locations.get(0).pointY},
+                {locations.get(4).pointX, locations.get(4).pointY},
+                {locations.get(6).pointX, locations.get(6).pointY},
+                {locations.get(2).pointX, locations.get(2).pointY}
+
+        };
+        fillFigure(square2, Color.WHITE);
+        int square3[][] = {
+                {locations.get(4).pointX, locations.get(4).pointY},
+                {locations.get(5).pointX, locations.get(5).pointY},
+                {locations.get(7).pointX, locations.get(7).pointY},
+                {locations.get(6).pointX, locations.get(6).pointY}
+
+        };
+        fillFigure(square3, Color.red);
+        pointsXY.clear();
+    }
+    private void button(){
+        ArrayList<Location3D> location3DS = new ArrayList<>();
+        ArrayList<Location> locations = new ArrayList<>();
+        //primera cara
+        location3DS.add(new Location3D(10,40 ,2 ));//a
+        location3DS.add(new Location3D(40,40 ,2 ));//b
+        location3DS.add(new Location3D(40,10 ,2 ));//c
+        location3DS.add(new Location3D(10,10 ,2 ));//d
+        //segunda cara
+        location3DS.add(new Location3D(10,40 ,12 ));//e
+        location3DS.add(new Location3D(40,40 ,12 ));//f
+        location3DS.add(new Location3D(40,10 ,12 ));//g
+        location3DS.add(new Location3D(10,10 ,12 ));//h
+
+        for (int i = 0; i < location3DS.size(); i++){
+            float u = 0;
+            float y = location3DS.get(i).pointY + (vector.pointY * u);
+            float z = location3DS.get(i).pointX + (vector.pointX * u);
+
+            locations.add(new Location((int) ((int)730.0+y), (int) ((int)420.0+z)));
+        }
+        for (Location point: locations){
+            putPixel(point.pointX, point.pointY,Color.red);
+        }
+        ArrayList<Location> pointsAB = g.bresenham(locations.get(0),locations.get(1));
+        ArrayList<Location> pointsBC = g.bresenham(locations.get(1),locations.get(2));
+        ArrayList<Location> pointsCD = g.bresenham(locations.get(2),locations.get(3));
+        ArrayList<Location> pointsDA = g.bresenham(locations.get(3), locations.get(0));
+
+        ArrayList<Location> pointsAB1 = g.bresenham(locations.get(4),locations.get(5));
+        ArrayList<Location> pointsBC1 = g.bresenham(locations.get(5),locations.get(6));
+        ArrayList<Location> pointsCD1 = g.bresenham(locations.get(6),locations.get(7));
+        ArrayList<Location> pointsDA1 = g.bresenham(locations.get(7), locations.get(4));
+
+        ArrayList<Location> pointsA = g.bresenham(locations.get(0),locations.get(4));
+        ArrayList<Location> pointsB = g.bresenham(locations.get(1),locations.get(5));
+        ArrayList<Location> pointsC = g.bresenham(locations.get(2),locations.get(6));
+        ArrayList<Location> pointsD = g.bresenham(locations.get(3), locations.get(7));
+
+
+        ArrayList<Location> points = pointsAB;
+        points.addAll(pointsBC);
+        points.addAll(pointsCD);
+        points.addAll(pointsDA);
+        //second cara
+        points.addAll(pointsAB1);
+        points.addAll(pointsBC1);
+        points.addAll(pointsCD1);
+        points.addAll(pointsDA1);
+
+        points.addAll(pointsA);
+        points.addAll(pointsB);
+        points.addAll(pointsC);
+        points.addAll(pointsD);
+
+        Location location = new Location(2,3);
+        for (Location point: points){
+            putPixel(point.pointX, point.pointY,Color.red);
+            location.setPointX(point.pointX);
+            location.setPointY(point.pointY);
+        }
+
+
+        inundacion2(location.pointX+3,location.pointY+3,Color.red,Color.white);
+
     }
     @Override
     public void keyPressed(KeyEvent keyEvent) {
