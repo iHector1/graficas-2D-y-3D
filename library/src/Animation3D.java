@@ -107,7 +107,7 @@ public class Animation3D extends JFrame implements Runnable, KeyListener {
         this.cubertoIncX=1;
         this.cubertoIncY=1;
         this.cubertoIncZ=1;
-        setTitle("Qbert");
+        setTitle("Cuberto");
         setSize(800,800);
         setLayout(null);
 
